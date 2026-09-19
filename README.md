@@ -15,6 +15,7 @@ The app uses the same project pipeline pattern as the repression simulator:
 - forward what-if simulator driven by market-condition parameters
 - JPM strategy proxy benchmark lines
 - sectorwise innovator screen
+- index fund strategy and Roth conversion simulator
 - 2D and 3D Plotly visualizations
 - evaluation scorecard
 - `eval_app.py` verification harness
@@ -156,6 +157,51 @@ Innovators tab defaults to the mid/small-cap tiers so these names are easier to
 review, while still allowing all tiers to be selected.
 
 The list is a model-driven research screen, not a buy recommendation.
+
+## Fund Strategy Tab
+
+The `Fund Strategy` tab compares index fund and managed-strategy examples from
+Vanguard, J.P. Morgan, iShares, and Schwab. It includes broad-market, S&P 500,
+growth, value, balanced, dividend-quality, minimum-volatility, equity-income,
+and advisory/model-portfolio style entries.
+
+The tab models:
+
+- expense ratio / advisory-fee drag
+- upside potential
+- downside risk
+- downside defense
+- value-versus-growth balance
+- dynamic market action under rate, inflation, recession, volatility, and
+  liquidity stress
+- lowest-risk allocation profiles
+- Roth conversion what-if analysis for pretax 401k/IRA assets
+
+The strategy model is intentionally practical:
+
+- In rising-rate or sticky-inflation regimes, it favors lower-fee core,
+  value/dividend, minimum-volatility, and balanced exposure over concentrated
+  growth.
+- In recession or credit-spread stress, it lowers the modeled score for
+  high-beta growth sleeves and emphasizes drawdown control.
+- In rate-cut, improving-EPS, and liquidity-rebound regimes, it allows more
+  core equity and growth/innovator exposure.
+- If AI capex remains strong but revenue conversion is weak, it favors
+  diversified index exposure and profitable compounders rather than speculative
+  AI beneficiaries.
+
+The Roth conversion section estimates whether converting part of a pretax
+401k/IRA balance to Roth may improve after-tax value under simple assumptions:
+current tax rate, future tax rate, conversion amount, expected return, years
+until withdrawal, and whether conversion taxes are paid from taxable cash.
+It also highlights why conversions can be risky in high-income years because
+they may affect marginal brackets, Medicare IRMAA, state taxes, and credits.
+
+Fee inputs are educational snapshots and should be verified with the provider
+before investing. Public fee references used while building the tab included
+Vanguard fund pages for `VTI`, `VUG`, and `VBIAX`, BlackRock/iShares ETF data
+for `IWF`, `IWD`, and `USMV`, J.P. Morgan pages for `JEPI`, and Chase/J.P.
+Morgan pricing disclosures for `JPMCAP`.
 
 ## Setup
 

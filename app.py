@@ -59,6 +59,225 @@ JPM_PROXY_TICKERS = {
     "JPM Focused Equity Income proxy (IWD)": "IWD",
 }
 
+FUND_STRATEGY_UNIVERSE = [
+    {
+        "Provider": "Vanguard",
+        "Fund": "Vanguard Total Stock Market ETF",
+        "Ticker": "VTI",
+        "Style": "Total market core",
+        "Category": "Broad U.S. equity",
+        "Expense ratio %": 0.03,
+        "Equity %": 100,
+        "Growth tilt": 52,
+        "Value tilt": 48,
+        "Income tilt": 24,
+        "Duration risk": 0,
+        "Downside defense": 46,
+        "Rebalance style": "Market-cap weighted; broad diversification; rebalance with contributions or bands.",
+        "Best use": "Low-cost core U.S. equity holding.",
+    },
+    {
+        "Provider": "Vanguard",
+        "Fund": "Vanguard S&P 500 ETF",
+        "Ticker": "VOO",
+        "Style": "Large-cap core",
+        "Category": "S&P 500 equity",
+        "Expense ratio %": 0.03,
+        "Equity %": 100,
+        "Growth tilt": 54,
+        "Value tilt": 46,
+        "Income tilt": 22,
+        "Duration risk": 0,
+        "Downside defense": 44,
+        "Rebalance style": "Large-cap index; concentration monitored through periodic allocation bands.",
+        "Best use": "Core U.S. large-cap exposure.",
+    },
+    {
+        "Provider": "Vanguard",
+        "Fund": "Vanguard Growth ETF",
+        "Ticker": "VUG",
+        "Style": "Growth",
+        "Category": "Large growth equity",
+        "Expense ratio %": 0.03,
+        "Equity %": 100,
+        "Growth tilt": 82,
+        "Value tilt": 18,
+        "Income tilt": 10,
+        "Duration risk": 0,
+        "Downside defense": 30,
+        "Rebalance style": "Use as a satellite; trim when valuation/rate stress rises.",
+        "Best use": "Long horizon growth sleeve.",
+    },
+    {
+        "Provider": "Vanguard",
+        "Fund": "Vanguard Value ETF",
+        "Ticker": "VTV",
+        "Style": "Value",
+        "Category": "Large value equity",
+        "Expense ratio %": 0.03,
+        "Equity %": 100,
+        "Growth tilt": 25,
+        "Value tilt": 75,
+        "Income tilt": 42,
+        "Duration risk": 0,
+        "Downside defense": 58,
+        "Rebalance style": "Raise weight when rates/inflation pressure high; watch financial cyclicality.",
+        "Best use": "Value/income ballast against growth concentration.",
+    },
+    {
+        "Provider": "Vanguard",
+        "Fund": "Vanguard Balanced Index Admiral",
+        "Ticker": "VBIAX",
+        "Style": "Balanced",
+        "Category": "60/40 stock-bond",
+        "Expense ratio %": 0.07,
+        "Equity %": 60,
+        "Growth tilt": 38,
+        "Value tilt": 40,
+        "Income tilt": 58,
+        "Duration risk": 38,
+        "Downside defense": 72,
+        "Rebalance style": "Built-in stock/bond rebalancing; most useful for lower-risk accounts.",
+        "Best use": "Simple low-risk diversified allocation.",
+    },
+    {
+        "Provider": "J.P. Morgan",
+        "Fund": "JPMorgan BetaBuilders U.S. Equity ETF",
+        "Ticker": "BBUS",
+        "Style": "Large/mid core",
+        "Category": "Broad U.S. equity",
+        "Expense ratio %": 0.02,
+        "Equity %": 100,
+        "Growth tilt": 52,
+        "Value tilt": 48,
+        "Income tilt": 24,
+        "Duration risk": 0,
+        "Downside defense": 46,
+        "Rebalance style": "Low-cost beta exposure; pair with bonds or minimum-volatility sleeve for risk control.",
+        "Best use": "Low-fee J.P. Morgan core equity proxy.",
+    },
+    {
+        "Provider": "J.P. Morgan",
+        "Fund": "JPMorgan Core Advisory Portfolio",
+        "Ticker": "JPMCAP",
+        "Style": "Managed advisory",
+        "Category": "Advisor-managed model",
+        "Expense ratio %": 1.45,
+        "Equity %": 70,
+        "Growth tilt": 48,
+        "Value tilt": 45,
+        "Income tilt": 48,
+        "Duration risk": 28,
+        "Downside defense": 68,
+        "Rebalance style": "Advisor/discretionary model; risk profile selected by client; portfolio monitored and rebalanced.",
+        "Best use": "Hands-off managed account when advice, behavior coaching, and service justify fees.",
+    },
+    {
+        "Provider": "J.P. Morgan",
+        "Fund": "JPMorgan Equity Premium Income ETF",
+        "Ticker": "JEPI",
+        "Style": "Income / option overlay",
+        "Category": "Equity income",
+        "Expense ratio %": 0.35,
+        "Equity %": 85,
+        "Growth tilt": 25,
+        "Value tilt": 55,
+        "Income tilt": 86,
+        "Duration risk": 0,
+        "Downside defense": 70,
+        "Rebalance style": "Covered-call income approach can cushion volatility but caps some upside.",
+        "Best use": "Income sleeve for moderate-risk investors.",
+    },
+    {
+        "Provider": "iShares",
+        "Fund": "iShares Russell 1000 Growth ETF",
+        "Ticker": "IWF",
+        "Style": "Growth",
+        "Category": "Large growth equity",
+        "Expense ratio %": 0.18,
+        "Equity %": 100,
+        "Growth tilt": 84,
+        "Value tilt": 16,
+        "Income tilt": 8,
+        "Duration risk": 0,
+        "Downside defense": 28,
+        "Rebalance style": "High-growth sleeve; reduce overweight when rates and valuation risk rise.",
+        "Best use": "Aggressive long-term growth.",
+    },
+    {
+        "Provider": "iShares",
+        "Fund": "iShares Russell 1000 Value ETF",
+        "Ticker": "IWD",
+        "Style": "Value",
+        "Category": "Large value equity",
+        "Expense ratio %": 0.18,
+        "Equity %": 100,
+        "Growth tilt": 22,
+        "Value tilt": 78,
+        "Income tilt": 45,
+        "Duration risk": 0,
+        "Downside defense": 58,
+        "Rebalance style": "Value sleeve; manages valuation risk but can lag during AI/growth-led markets.",
+        "Best use": "Value counterweight to growth-heavy portfolios.",
+    },
+    {
+        "Provider": "iShares",
+        "Fund": "iShares MSCI USA Min Vol Factor ETF",
+        "Ticker": "USMV",
+        "Style": "Minimum volatility",
+        "Category": "Defensive factor equity",
+        "Expense ratio %": 0.15,
+        "Equity %": 100,
+        "Growth tilt": 38,
+        "Value tilt": 44,
+        "Income tilt": 34,
+        "Duration risk": 0,
+        "Downside defense": 76,
+        "Rebalance style": "Factor index targets lower-volatility stocks and sector constraints.",
+        "Best use": "Equity exposure with lower drawdown target.",
+    },
+    {
+        "Provider": "Schwab",
+        "Fund": "Schwab U.S. Broad Market ETF",
+        "Ticker": "SCHB",
+        "Style": "Total market core",
+        "Category": "Broad U.S. equity",
+        "Expense ratio %": 0.03,
+        "Equity %": 100,
+        "Growth tilt": 52,
+        "Value tilt": 48,
+        "Income tilt": 24,
+        "Duration risk": 0,
+        "Downside defense": 46,
+        "Rebalance style": "Low-cost broad beta; rebalance with allocation bands.",
+        "Best use": "Alternative low-cost total-market core.",
+    },
+    {
+        "Provider": "Schwab",
+        "Fund": "Schwab U.S. Dividend Equity ETF",
+        "Ticker": "SCHD",
+        "Style": "Dividend quality",
+        "Category": "Equity income",
+        "Expense ratio %": 0.06,
+        "Equity %": 100,
+        "Growth tilt": 32,
+        "Value tilt": 62,
+        "Income tilt": 76,
+        "Duration risk": 0,
+        "Downside defense": 64,
+        "Rebalance style": "Dividend-quality screen; use as income/value sleeve.",
+        "Best use": "Quality dividend exposure.",
+    },
+]
+
+MODEL_ALLOCATIONS = [
+    {"Risk profile": "Lowest risk", "Core equity %": 25, "Balanced fund %": 45, "Value/dividend/min-vol %": 20, "Growth/innovator %": 10, "Cash/short bond %": 0},
+    {"Risk profile": "Conservative growth", "Core equity %": 40, "Balanced fund %": 30, "Value/dividend/min-vol %": 20, "Growth/innovator %": 10, "Cash/short bond %": 0},
+    {"Risk profile": "Balanced", "Core equity %": 50, "Balanced fund %": 15, "Value/dividend/min-vol %": 20, "Growth/innovator %": 15, "Cash/short bond %": 0},
+    {"Risk profile": "Growth", "Core equity %": 55, "Balanced fund %": 5, "Value/dividend/min-vol %": 15, "Growth/innovator %": 25, "Cash/short bond %": 0},
+    {"Risk profile": "Aggressive growth", "Core equity %": 50, "Balanced fund %": 0, "Value/dividend/min-vol %": 10, "Growth/innovator %": 40, "Cash/short bond %": 0},
+]
+
 INNOVATOR_UNIVERSE = [
     {"Ticker": "MSFT", "Company": "Microsoft", "Sector": "Technology", "Industry": "Cloud software", "Revenue growth": 15, "EPS/FCF growth": 18, "FCF quality": 95, "Balance sheet": 91, "Moat": 94, "Downside resilience": 88, "Innovation intensity": 90, "Valuation discipline": 66, "Cyclicality risk": 28, "Regulatory risk": 45},
     {"Ticker": "GOOGL", "Company": "Alphabet", "Sector": "Communication Services", "Industry": "AI, search, cloud", "Revenue growth": 14, "EPS/FCF growth": 17, "FCF quality": 92, "Balance sheet": 92, "Moat": 92, "Downside resilience": 86, "Innovation intensity": 88, "Valuation discipline": 76, "Cyclicality risk": 32, "Regulatory risk": 58},
@@ -895,6 +1114,149 @@ def innovator_frame(inputs: MarketInputs) -> pd.DataFrame:
     return df.sort_values(["Macro-adjusted innovator score", "Growth vs MSFT %"], ascending=False)
 
 
+def fund_strategy_frame(inputs: MarketInputs) -> pd.DataFrame:
+    df = pd.DataFrame(FUND_STRATEGY_UNIVERSE)
+    rate_stress = max(inputs.ten_year_yield - 4.0, 0) * 6 + max(inputs.fed_policy_path, 0) * 4
+    inflation_stress = max(inputs.inflation - 2.5, 0) * 5
+    recession_stress = inputs.recession_probability * 0.18 + inputs.credit_spread * 4
+    growth_support = inputs.eps_revision * 0.9 + inputs.ai_revenue_conversion * 0.06 + inputs.liquidity_impulse * 1.4
+    value_support = inflation_stress * 0.28 + rate_stress * 0.18 - max(-inputs.fed_policy_path, 0) * 1.5
+
+    df["Fee drag score"] = np.clip(100 - df["Expense ratio %"] * 45, 0, 100)
+    df["Upside potential"] = np.clip(
+        28
+        + df["Equity %"] * 0.24
+        + df["Growth tilt"] * 0.30
+        + df["Value tilt"] * 0.08
+        + growth_support
+        - rate_stress * (df["Growth tilt"] / 100) * 0.75
+        - recession_stress * 0.10,
+        0,
+        100,
+    )
+    df["Downside risk"] = np.clip(
+        22
+        + df["Equity %"] * 0.34
+        + df["Growth tilt"] * 0.22
+        + df["Duration risk"] * 0.18
+        - df["Downside defense"] * 0.34
+        + recession_stress * 0.34
+        + rate_stress * 0.18
+        + inputs.volatility_regime * 0.22
+        - value_support * (df["Value tilt"] / 100) * 0.20,
+        0,
+        100,
+    )
+    df["Value vs growth balance"] = np.where(
+        df["Growth tilt"] - df["Value tilt"] > 25,
+        "Growth-led",
+        np.where(df["Value tilt"] - df["Growth tilt"] > 20, "Value/income-led", "Balanced/core"),
+    )
+    df["Scenario-adjusted fund score"] = np.clip(
+        df["Upside potential"] * 0.42
+        + df["Downside defense"] * 0.22
+        + df["Fee drag score"] * 0.18
+        + df["Income tilt"] * 0.08
+        - df["Downside risk"] * 0.26,
+        0,
+        100,
+    )
+    df["Lowest-risk rank"] = df["Downside risk"].rank(method="min")
+    df["Dynamic action"] = df.apply(dynamic_fund_action, axis=1)
+    return df.sort_values(["Scenario-adjusted fund score", "Downside risk"], ascending=[False, True])
+
+
+def dynamic_fund_action(row: pd.Series) -> str:
+    if row["Downside risk"] <= 35 and row["Scenario-adjusted fund score"] >= 55:
+        return "Core defensive candidate; suitable for larger base allocation."
+    if row["Style"] in {"Growth"} and row["Downside risk"] > 60:
+        return "Keep as a smaller satellite; rebalance down when rates or valuations are stressed."
+    if "Income" in row["Style"] or "Dividend" in row["Style"] or "Minimum" in row["Style"]:
+        return "Use as a stabilizer; compare income benefit against capped upside or factor lag."
+    if row["Expense ratio %"] > 0.75:
+        return "Fee hurdle is high; use only if advice, tax help, and behavior coaching add value."
+    return "Core or satellite candidate; rebalance with risk bands and contribution flows."
+
+
+def model_allocation_frame(inputs: MarketInputs) -> pd.DataFrame:
+    df = pd.DataFrame(MODEL_ALLOCATIONS)
+    stress = (
+        inputs.recession_probability * 0.22
+        + max(inputs.ten_year_yield - 4, 0) * 5
+        + max(inputs.inflation - 2.5, 0) * 4
+        + inputs.volatility_regime * 0.25
+        + inputs.credit_spread * 4
+    )
+    growth_bonus = max(inputs.eps_revision, 0) * 0.7 + max(inputs.liquidity_impulse, 0) * 2 + max(inputs.ai_revenue_conversion - 55, 0) * 0.08
+    df["Estimated upside score"] = np.clip(
+        df["Core equity %"] * 0.34
+        + df["Growth/innovator %"] * 0.64
+        + df["Value/dividend/min-vol %"] * 0.26
+        + growth_bonus,
+        0,
+        100,
+    )
+    df["Estimated downside risk"] = np.clip(
+        df["Core equity %"] * 0.30
+        + df["Growth/innovator %"] * 0.56
+        + df["Balanced fund %"] * 0.13
+        + stress * 0.36
+        - df["Value/dividend/min-vol %"] * 0.12,
+        0,
+        100,
+    )
+    df["When to use"] = [
+        "Capital preservation, near-retirement, or low drawdown tolerance.",
+        "Moderate equity participation with drawdown control.",
+        "Default long-term mix when time horizon and risk tolerance are medium.",
+        "Long horizon with tolerance for deeper drawdowns.",
+        "Highest upside target; requires strong behavior discipline and long time horizon.",
+    ]
+    df["Dynamic risk rule"] = [
+        "Add growth only after recession and rate stress improve.",
+        "Rebalance from value/min-vol into core when volatility cools.",
+        "Keep growth/value bands close to target; rebalance annually or at 5% drift.",
+        "Trim growth after large rallies or when real rates rise quickly.",
+        "Hold only if emergency liquidity and retirement horizon support high volatility.",
+    ]
+    return df
+
+
+def roth_conversion_frame(
+    pretax_balance: float,
+    conversion_amount: float,
+    tax_rate_now: float,
+    tax_rate_future: float,
+    annual_return: float,
+    years: int,
+    tax_paid_from_cash: bool,
+) -> pd.DataFrame:
+    conversion = min(max(conversion_amount, 0), pretax_balance)
+    stay_pretax = pretax_balance * (1 + annual_return / 100) ** years
+    taxable_after_tax = stay_pretax * (1 - tax_rate_future / 100)
+    tax_due = conversion * tax_rate_now / 100
+    roth_principal = conversion if tax_paid_from_cash else max(conversion - tax_due, 0)
+    roth_future = roth_principal * (1 + annual_return / 100) ** years
+    remaining_pretax = (pretax_balance - conversion) * (1 + annual_return / 100) ** years
+    remaining_after_tax = remaining_pretax * (1 - tax_rate_future / 100)
+    combined_after_tax = roth_future + remaining_after_tax
+    breakeven_future_tax = np.nan
+    if stay_pretax > 0:
+        breakeven_future_tax = max(0, min(100, (1 - combined_after_tax / stay_pretax) * 100))
+
+    return pd.DataFrame(
+        [
+            {"Metric": "No conversion estimated after-tax value", "Value": taxable_after_tax},
+            {"Metric": "Conversion strategy estimated after-tax value", "Value": combined_after_tax},
+            {"Metric": "Estimated tax due now", "Value": tax_due},
+            {"Metric": "Roth future value", "Value": roth_future},
+            {"Metric": "Remaining pretax after-tax value", "Value": remaining_after_tax},
+            {"Metric": "Conversion advantage / disadvantage", "Value": combined_after_tax - taxable_after_tax},
+            {"Metric": "Breakeven future tax rate", "Value": breakeven_future_tax},
+        ]
+    )
+
+
 def macro_adjusted_frame(inputs: MarketInputs) -> pd.DataFrame:
     df = watchlist_frame()
     rate_penalty = np.maximum(inputs.ten_year_yield - 4.0, 0) * 3.4 * df["Rate sensitivity"]
@@ -1729,6 +2091,54 @@ def plot_sector_innovators(innovators: pd.DataFrame) -> go.Figure:
     return fig
 
 
+def plot_fund_strategy(funds: pd.DataFrame) -> go.Figure:
+    fig = px.scatter(
+        funds,
+        x="Downside risk",
+        y="Upside potential",
+        size="Scenario-adjusted fund score",
+        color="Provider",
+        symbol="Value vs growth balance",
+        hover_name="Ticker",
+        hover_data=["Fund", "Style", "Expense ratio %", "Dynamic action"],
+        title="Fund strategy: upside potential versus downside risk",
+    )
+    fig.update_layout(xaxis_title="Lower is better: downside risk", yaxis_title="Upside potential", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def plot_fee_vs_score(funds: pd.DataFrame) -> go.Figure:
+    fig = px.bar(
+        funds.sort_values("Expense ratio %"),
+        x="Ticker",
+        y="Expense ratio %",
+        color="Scenario-adjusted fund score",
+        color_continuous_scale=[[0, PALETTE["red"]], [0.55, PALETTE["amber"]], [1, PALETTE["green"]]],
+        title="Expense ratios and scenario-adjusted score",
+        hover_data=["Provider", "Fund", "Style"],
+    )
+    fig.update_layout(margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def plot_allocation_models(allocations: pd.DataFrame) -> go.Figure:
+    plot_frame = allocations.melt(
+        id_vars=["Risk profile"],
+        value_vars=["Core equity %", "Balanced fund %", "Value/dividend/min-vol %", "Growth/innovator %", "Cash/short bond %"],
+        var_name="Sleeve",
+        value_name="Allocation %",
+    )
+    fig = px.bar(
+        plot_frame,
+        x="Risk profile",
+        y="Allocation %",
+        color="Sleeve",
+        title="Model allocations by risk profile",
+    )
+    fig.update_layout(barmode="stack", xaxis_title="", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
 def verdict(eval_df: pd.DataFrame) -> str:
     counts = eval_df["Result"].value_counts().to_dict()
     if counts.get("Fail", 0):
@@ -1743,6 +2153,8 @@ def main() -> None:
     inputs = get_inputs()
     scored = macro_adjusted_frame(inputs)
     innovators = innovator_frame(inputs)
+    funds = fund_strategy_frame(inputs)
+    allocations = model_allocation_frame(inputs)
     paths, portfolio = simulate_paths(inputs)
     eval_df = build_evaluation(inputs, scored, portfolio)
 
@@ -1772,7 +2184,7 @@ def main() -> None:
     metric_cols[3].metric("10Y yield", f"{inputs.ten_year_yield:.2f}%")
     metric_cols[4].metric("AI capex growth", f"{inputs.ai_capex_growth:.0f}%")
 
-    tabs = st.tabs(["Scorecard", "Simulation", "2001-Today + What If", "Innovators", "Factors", "Market Surface", "Evaluation", "Data"])
+    tabs = st.tabs(["Scorecard", "Simulation", "2001-Today + What If", "Innovators", "Fund Strategy", "Factors", "Market Surface", "Evaluation", "Data"])
 
     with tabs[0]:
         left, right = st.columns([1.25, 1])
@@ -1960,6 +2372,153 @@ def main() -> None:
         )
 
     with tabs[4]:
+        st.subheader("Index Fund Strategy: Fees, Upside, Downside, And Dynamic Risk Control")
+        st.markdown(
+            """
+            <p class='note'>
+            This tab compares low-cost index funds, J.P. Morgan managed/proxy strategies, Vanguard,
+            iShares, and Schwab examples. Expense ratios and advisory fees should be verified before
+            investing because providers can change them. The model is educational and does not replace
+            tax, investment, or retirement advice.
+            </p>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        provider_filter = st.multiselect(
+            "Providers",
+            options=sorted(funds["Provider"].unique()),
+            default=sorted(funds["Provider"].unique()),
+        )
+        style_filter = st.multiselect(
+            "Strategy styles",
+            options=sorted(funds["Style"].unique()),
+            default=sorted(funds["Style"].unique()),
+        )
+        filtered_funds = funds[funds["Provider"].isin(provider_filter) & funds["Style"].isin(style_filter)]
+
+        lowest_risk = funds.sort_values(["Downside risk", "Expense ratio %"]).iloc[0]
+        highest_score = funds.sort_values(["Scenario-adjusted fund score", "Expense ratio %"], ascending=[False, True]).iloc[0]
+        fee_leader = funds.sort_values(["Expense ratio %", "Scenario-adjusted fund score"], ascending=[True, False]).iloc[0]
+        metric_cols = st.columns(3)
+        metric_cols[0].metric("Lowest modeled risk", f"{lowest_risk['Ticker']} ({lowest_risk['Downside risk']:.1f})")
+        metric_cols[1].metric("Highest scenario score", f"{highest_score['Ticker']} ({highest_score['Scenario-adjusted fund score']:.1f})")
+        metric_cols[2].metric("Lowest listed fee", f"{fee_leader['Ticker']} ({fee_leader['Expense ratio %']:.2f}%)")
+
+        left, right = st.columns([1.15, 1])
+        with left:
+            st.plotly_chart(plot_fund_strategy(filtered_funds), width="stretch")
+        with right:
+            st.plotly_chart(plot_fee_vs_score(filtered_funds), width="stretch")
+
+        st.subheader("Fund Comparison Table")
+        st.dataframe(
+            filtered_funds[
+                [
+                    "Provider",
+                    "Ticker",
+                    "Fund",
+                    "Style",
+                    "Category",
+                    "Expense ratio %",
+                    "Upside potential",
+                    "Downside risk",
+                    "Downside defense",
+                    "Scenario-adjusted fund score",
+                    "Value vs growth balance",
+                    "Dynamic action",
+                    "Best use",
+                ]
+            ].round(2),
+            width="stretch",
+            hide_index=True,
+        )
+
+        st.subheader("Lowest-Risk Allocation Strategy")
+        selected_profile = st.selectbox(
+            "Risk profile",
+            options=allocations["Risk profile"].tolist(),
+            index=0,
+        )
+        selected_allocation = allocations[allocations["Risk profile"] == selected_profile]
+        st.plotly_chart(plot_allocation_models(allocations), width="stretch")
+        st.dataframe(selected_allocation.round(2), width="stretch", hide_index=True)
+
+        strategy_notes = pd.DataFrame(
+            [
+                {
+                    "Market condition": "Rates and inflation rising",
+                    "Dynamic move": "Reduce growth overweight, add value/dividend/min-vol or balanced exposure, rebalance high-valuation winners.",
+                    "Why": "Growth cash flows are more sensitive to discount-rate increases.",
+                },
+                {
+                    "Market condition": "Recession risk and credit spreads rising",
+                    "Dynamic move": "Favor balanced, minimum-volatility, dividend-quality, and broad-market core over concentrated growth.",
+                    "Why": "Drawdown control matters more than maximum upside during liquidity stress.",
+                },
+                {
+                    "Market condition": "Rate cuts, EPS revisions, and liquidity improving",
+                    "Dynamic move": "Gradually restore core equity and growth/innovator sleeves while keeping valuation bands.",
+                    "Why": "Growth assets often recover when discount rates fall and earnings breadth improves.",
+                },
+                {
+                    "Market condition": "AI capex strong but revenue conversion weak",
+                    "Dynamic move": "Prefer diversified index exposure and profitable compounders over speculative AI beneficiaries.",
+                    "Why": "Capex can become margin pressure if monetization lags.",
+                },
+            ]
+        )
+        st.subheader("Dynamic Market Playbook")
+        st.dataframe(strategy_notes, width="stretch", hide_index=True)
+
+        st.subheader("401k To Roth Conversion Simulator")
+        roth_cols = st.columns(3)
+        with roth_cols[0]:
+            pretax_balance = st.number_input("Pretax 401k/IRA balance", 10_000, 5_000_000, 250_000, 10_000)
+            conversion_amount = st.number_input("Roth conversion amount", 0, 1_000_000, 50_000, 5_000)
+        with roth_cols[1]:
+            tax_rate_now = st.slider("Estimated tax rate now (%)", 0.0, 50.0, 24.0, 1.0)
+            tax_rate_future = st.slider("Estimated future tax rate (%)", 0.0, 50.0, 28.0, 1.0)
+        with roth_cols[2]:
+            annual_return = st.slider("Assumed annual return (%)", 0.0, 12.0, 6.0, 0.25)
+            conversion_years = st.slider("Years until withdrawal", 1, 40, 15, 1)
+            tax_paid_from_cash = st.checkbox("Pay conversion tax from taxable cash", value=True)
+        roth_summary = roth_conversion_frame(
+            float(pretax_balance),
+            float(conversion_amount),
+            float(tax_rate_now),
+            float(tax_rate_future),
+            float(annual_return),
+            int(conversion_years),
+            bool(tax_paid_from_cash),
+        )
+        roth_display = roth_summary.copy()
+        roth_display["Value"] = roth_display.apply(
+            lambda row: f"{row['Value']:.2f}%" if row["Metric"] == "Breakeven future tax rate" else money(row["Value"]),
+            axis=1,
+        )
+        st.dataframe(roth_display, width="stretch", hide_index=True)
+        st.markdown(
+            """
+            <p class='note'>
+            Roth conversions can make sense when the current tax rate is lower than the expected future tax
+            rate, taxes can be paid from outside cash, and the investor has enough years for tax-free
+            compounding. They can be risky in high-income years because conversions may increase marginal
+            taxes, Medicare IRMAA exposure, state taxes, and lost credits. A CPA or fiduciary advisor should
+            review the actual tax return before converting.
+            </p>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.download_button(
+            "Download fund strategy table",
+            data=funds.to_csv(index=False),
+            file_name="fund_strategy_table.csv",
+            mime="text/csv",
+        )
+
+    with tabs[5]:
         st.plotly_chart(plot_factor_heatmap(scored), width="stretch")
         st.markdown(
             """
@@ -1972,10 +2531,10 @@ def main() -> None:
             unsafe_allow_html=True,
         )
 
-    with tabs[5]:
+    with tabs[6]:
         st.plotly_chart(plot_3d_surface(inputs), width="stretch")
 
-    with tabs[6]:
+    with tabs[7]:
         result = verdict(eval_df)
         if result.startswith("Fail"):
             st.error(result)
@@ -1989,11 +2548,13 @@ def main() -> None:
         with right:
             st.dataframe(eval_df, width="stretch", hide_index=True)
 
-    with tabs[7]:
+    with tabs[8]:
         st.subheader("Scenario-adjusted watchlist")
         st.dataframe(scored.round(2), width="stretch", hide_index=True)
         st.subheader("Innovator screen")
         st.dataframe(innovators.round(2), width="stretch", hide_index=True)
+        st.subheader("Fund strategy")
+        st.dataframe(funds.round(2), width="stretch", hide_index=True)
         st.subheader("Portfolio path")
         st.dataframe(portfolio.round(2), width="stretch", hide_index=True)
         st.download_button(

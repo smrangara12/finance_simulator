@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import numpy as np
 from streamlit.testing.v1 import AppTest
 
 from app import (
@@ -7,9 +8,12 @@ from app import (
     build_evaluation,
     build_forward_what_if,
     build_historical_backtest,
+    fund_strategy_frame,
     innovator_frame,
     macro_adjusted_frame,
+    model_allocation_frame,
     preset_values,
+    roth_conversion_frame,
     simulate_paths,
 )
 
@@ -61,6 +65,8 @@ def run_model_evals() -> None:
         inputs = inputs_from_preset(preset)
         scored = macro_adjusted_frame(inputs)
         innovators = innovator_frame(inputs)
+        funds = fund_strategy_frame(inputs)
+        allocations = model_allocation_frame(inputs)
         paths, portfolio = simulate_paths(inputs)
         eval_df = build_evaluation(inputs, scored, portfolio)
 
@@ -68,11 +74,17 @@ def run_model_evals() -> None:
         assert not paths.empty, f"{preset}: paths frame is empty"
         assert not portfolio.empty, f"{preset}: portfolio frame is empty"
         assert not innovators.empty, f"{preset}: innovator frame is empty"
+        assert not funds.empty, f"{preset}: fund strategy frame is empty"
+        assert not allocations.empty, f"{preset}: allocation frame is empty"
         assert not eval_df.empty, f"{preset}: eval frame is empty"
         assert scored["Scenario score"].between(0, 100).all(), f"{preset}: scenario scores out of range"
         assert innovators["Macro-adjusted innovator score"].between(0, 100).all(), f"{preset}: innovator scores out of range"
         assert innovators["Ticker"].nunique() >= 35, f"{preset}: expected expanded innovator universe"
         assert innovators["Cap tier"].str.contains("Mid|Small", regex=True).any(), f"{preset}: mid/small cap innovators missing"
+        assert funds["Scenario-adjusted fund score"].between(0, 100).all(), f"{preset}: fund scores out of range"
+        assert funds["Downside risk"].between(0, 100).all(), f"{preset}: fund risk out of range"
+        assert {"VTI", "VBIAX", "JPMCAP", "JEPI", "IWF", "IWD"}.issubset(set(funds["Ticker"])), f"{preset}: missing key fund strategies"
+        assert "Lowest risk" in set(allocations["Risk profile"]), f"{preset}: missing lowest-risk allocation"
         assert portfolio["Portfolio value"].iloc[-1] > 0, f"{preset}: portfolio value must stay positive"
         assert set(eval_df["Result"]).issubset({"Pass", "Warn", "Fail"}), f"{preset}: invalid eval result"
 
@@ -98,6 +110,10 @@ def run_model_evals() -> None:
     assert forward_summary["Median terminal value"].gt(0).all(), "forward terminal values should be positive"
     assert source in {"yfinance adjusted close", "synthetic fallback", "mixed: yfinance plus synthetic fallback for missing tickers"}
     print(f"Backtest: assets={metrics['Ticker'].nunique()}; forward_assets={len(forward_summary)}; source={source}")
+
+    roth = roth_conversion_frame(250_000, 50_000, 24, 28, 6, 15, True)
+    advantage = roth.loc[roth["Metric"] == "Conversion advantage / disadvantage", "Value"].iloc[0]
+    assert np.isfinite(advantage), "Roth conversion advantage should be finite"
 
 
 def run_streamlit_eval() -> None:
