@@ -144,10 +144,18 @@ The output includes:
 - sector and industry summary table
 
 The innovator universe includes the original watchlist names plus broader
-technology, AI infrastructure, cybersecurity, healthcare innovation, and grid
-infrastructure candidates such as `NVDA`, `AMD`, `TSM`, `ASML`, `NOW`, `CRM`,
-`PANW`, `CRWD`, `LLY`, and `ISRG`. The list is a model-driven research screen,
-not a buy recommendation.
+technology, AI infrastructure, cybersecurity, healthcare innovation, consumer
+innovation, fintech, energy technology, and grid infrastructure candidates.
+Large-cap examples include `NVDA`, `AMD`, `TSM`, `ASML`, `NOW`, `CRM`, `PANW`,
+`CRWD`, `LLY`, and `ISRG`.
+
+The screen also includes mid- and small-cap innovators such as `DDOG`, `NET`,
+`GTLB`, `IOT`, `DUOL`, `APPF`, `FOUR`, `BILL`, `ALAB`, `LSCC`, `ONTO`, `TMDX`,
+`INSP`, `AXON`, `FSLR`, `FLNC`, `STEM`, `ENVX`, `ELF`, and `ONON`. The
+Innovators tab defaults to the mid/small-cap tiers so these names are easier to
+review, while still allowing all tiers to be selected.
+
+The list is a model-driven research screen, not a buy recommendation.
 
 ## Setup
 

@@ -71,6 +71,8 @@ def run_model_evals() -> None:
         assert not eval_df.empty, f"{preset}: eval frame is empty"
         assert scored["Scenario score"].between(0, 100).all(), f"{preset}: scenario scores out of range"
         assert innovators["Macro-adjusted innovator score"].between(0, 100).all(), f"{preset}: innovator scores out of range"
+        assert innovators["Ticker"].nunique() >= 35, f"{preset}: expected expanded innovator universe"
+        assert innovators["Cap tier"].str.contains("Mid|Small", regex=True).any(), f"{preset}: mid/small cap innovators missing"
         assert portfolio["Portfolio value"].iloc[-1] > 0, f"{preset}: portfolio value must stay positive"
         assert set(eval_df["Result"]).issubset({"Pass", "Warn", "Fail"}), f"{preset}: invalid eval result"
 

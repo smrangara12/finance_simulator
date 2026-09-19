@@ -81,6 +81,26 @@ INNOVATOR_UNIVERSE = [
     {"Ticker": "LLY", "Company": "Eli Lilly", "Sector": "Healthcare", "Industry": "Biopharma innovation", "Revenue growth": 18, "EPS/FCF growth": 24, "FCF quality": 78, "Balance sheet": 76, "Moat": 90, "Downside resilience": 80, "Innovation intensity": 92, "Valuation discipline": 44, "Cyclicality risk": 20, "Regulatory risk": 48},
     {"Ticker": "ISRG", "Company": "Intuitive Surgical", "Sector": "Healthcare", "Industry": "Robotic surgery", "Revenue growth": 14, "EPS/FCF growth": 17, "FCF quality": 88, "Balance sheet": 94, "Moat": 88, "Downside resilience": 82, "Innovation intensity": 86, "Valuation discipline": 58, "Cyclicality risk": 24, "Regulatory risk": 34},
     {"Ticker": "TMO", "Company": "Thermo Fisher Scientific", "Sector": "Healthcare", "Industry": "Life-science tools", "Revenue growth": 8, "EPS/FCF growth": 12, "FCF quality": 84, "Balance sheet": 76, "Moat": 82, "Downside resilience": 78, "Innovation intensity": 72, "Valuation discipline": 70, "Cyclicality risk": 34, "Regulatory risk": 24},
+    {"Ticker": "DDOG", "Company": "Datadog", "Sector": "Technology", "Industry": "Observability / cloud monitoring", "Cap tier": "Mid/Large growth", "Revenue growth": 21, "EPS/FCF growth": 24, "FCF quality": 78, "Balance sheet": 86, "Moat": 76, "Downside resilience": 66, "Innovation intensity": 86, "Valuation discipline": 48, "Cyclicality risk": 46, "Regulatory risk": 16},
+    {"Ticker": "NET", "Company": "Cloudflare", "Sector": "Technology", "Industry": "Edge cloud / security", "Cap tier": "Mid/Large growth", "Revenue growth": 24, "EPS/FCF growth": 22, "FCF quality": 62, "Balance sheet": 82, "Moat": 72, "Downside resilience": 58, "Innovation intensity": 88, "Valuation discipline": 36, "Cyclicality risk": 50, "Regulatory risk": 18},
+    {"Ticker": "GTLB", "Company": "GitLab", "Sector": "Technology", "Industry": "DevSecOps platform", "Cap tier": "Mid cap", "Revenue growth": 22, "EPS/FCF growth": 20, "FCF quality": 58, "Balance sheet": 88, "Moat": 66, "Downside resilience": 56, "Innovation intensity": 84, "Valuation discipline": 42, "Cyclicality risk": 52, "Regulatory risk": 14},
+    {"Ticker": "IOT", "Company": "Samsara", "Sector": "Technology", "Industry": "Industrial IoT / fleet software", "Cap tier": "Mid cap", "Revenue growth": 24, "EPS/FCF growth": 22, "FCF quality": 60, "Balance sheet": 86, "Moat": 68, "Downside resilience": 58, "Innovation intensity": 82, "Valuation discipline": 40, "Cyclicality risk": 56, "Regulatory risk": 16},
+    {"Ticker": "DUOL", "Company": "Duolingo", "Sector": "Communication Services", "Industry": "AI-enabled education software", "Cap tier": "Mid cap", "Revenue growth": 25, "EPS/FCF growth": 26, "FCF quality": 76, "Balance sheet": 92, "Moat": 74, "Downside resilience": 68, "Innovation intensity": 86, "Valuation discipline": 44, "Cyclicality risk": 42, "Regulatory risk": 18},
+    {"Ticker": "APPF", "Company": "AppFolio", "Sector": "Technology", "Industry": "Vertical SaaS / property software", "Cap tier": "Mid cap", "Revenue growth": 17, "EPS/FCF growth": 22, "FCF quality": 74, "Balance sheet": 90, "Moat": 70, "Downside resilience": 70, "Innovation intensity": 76, "Valuation discipline": 58, "Cyclicality risk": 44, "Regulatory risk": 16},
+    {"Ticker": "FOUR", "Company": "Shift4 Payments", "Sector": "Financial Technology", "Industry": "Payments infrastructure", "Cap tier": "Mid cap", "Revenue growth": 18, "EPS/FCF growth": 21, "FCF quality": 68, "Balance sheet": 66, "Moat": 66, "Downside resilience": 58, "Innovation intensity": 70, "Valuation discipline": 60, "Cyclicality risk": 58, "Regulatory risk": 26},
+    {"Ticker": "BILL", "Company": "BILL Holdings", "Sector": "Financial Technology", "Industry": "SMB payments automation", "Cap tier": "Mid cap", "Revenue growth": 12, "EPS/FCF growth": 18, "FCF quality": 62, "Balance sheet": 78, "Moat": 58, "Downside resilience": 52, "Innovation intensity": 70, "Valuation discipline": 54, "Cyclicality risk": 64, "Regulatory risk": 24},
+    {"Ticker": "ALAB", "Company": "Astera Labs", "Sector": "Technology", "Industry": "AI connectivity semiconductors", "Cap tier": "Mid cap", "Revenue growth": 32, "EPS/FCF growth": 34, "FCF quality": 58, "Balance sheet": 82, "Moat": 62, "Downside resilience": 48, "Innovation intensity": 88, "Valuation discipline": 28, "Cyclicality risk": 72, "Regulatory risk": 24},
+    {"Ticker": "LSCC", "Company": "Lattice Semiconductor", "Sector": "Technology", "Industry": "Low-power programmable chips", "Cap tier": "Mid cap", "Revenue growth": 12, "EPS/FCF growth": 16, "FCF quality": 78, "Balance sheet": 86, "Moat": 70, "Downside resilience": 66, "Innovation intensity": 76, "Valuation discipline": 58, "Cyclicality risk": 62, "Regulatory risk": 24},
+    {"Ticker": "ONTO", "Company": "Onto Innovation", "Sector": "Technology", "Industry": "Semiconductor process control", "Cap tier": "Mid cap", "Revenue growth": 13, "EPS/FCF growth": 17, "FCF quality": 76, "Balance sheet": 90, "Moat": 70, "Downside resilience": 68, "Innovation intensity": 74, "Valuation discipline": 62, "Cyclicality risk": 58, "Regulatory risk": 20},
+    {"Ticker": "TMDX", "Company": "TransMedics", "Sector": "Healthcare", "Industry": "Organ transplant technology", "Cap tier": "Small/Mid cap", "Revenue growth": 28, "EPS/FCF growth": 30, "FCF quality": 42, "Balance sheet": 62, "Moat": 64, "Downside resilience": 44, "Innovation intensity": 88, "Valuation discipline": 30, "Cyclicality risk": 46, "Regulatory risk": 56},
+    {"Ticker": "INSP", "Company": "Inspire Medical Systems", "Sector": "Healthcare", "Industry": "Sleep apnea medical devices", "Cap tier": "Small/Mid cap", "Revenue growth": 18, "EPS/FCF growth": 20, "FCF quality": 46, "Balance sheet": 80, "Moat": 60, "Downside resilience": 48, "Innovation intensity": 76, "Valuation discipline": 44, "Cyclicality risk": 44, "Regulatory risk": 48},
+    {"Ticker": "AXON", "Company": "Axon Enterprise", "Sector": "Industrials/Technology", "Industry": "Public safety software and devices", "Cap tier": "Mid/Large growth", "Revenue growth": 22, "EPS/FCF growth": 24, "FCF quality": 72, "Balance sheet": 84, "Moat": 78, "Downside resilience": 74, "Innovation intensity": 84, "Valuation discipline": 48, "Cyclicality risk": 34, "Regulatory risk": 34},
+    {"Ticker": "FSLR", "Company": "First Solar", "Sector": "Energy Technology", "Industry": "Solar manufacturing", "Cap tier": "Mid cap", "Revenue growth": 15, "EPS/FCF growth": 22, "FCF quality": 64, "Balance sheet": 84, "Moat": 68, "Downside resilience": 58, "Innovation intensity": 72, "Valuation discipline": 66, "Cyclicality risk": 62, "Regulatory risk": 46},
+    {"Ticker": "FLNC", "Company": "Fluence Energy", "Sector": "Energy Technology", "Industry": "Grid-scale energy storage", "Cap tier": "Small cap", "Revenue growth": 20, "EPS/FCF growth": 24, "FCF quality": 38, "Balance sheet": 62, "Moat": 52, "Downside resilience": 38, "Innovation intensity": 78, "Valuation discipline": 44, "Cyclicality risk": 70, "Regulatory risk": 42},
+    {"Ticker": "STEM", "Company": "Stem", "Sector": "Energy Technology", "Industry": "AI energy storage software", "Cap tier": "Small cap", "Revenue growth": 10, "EPS/FCF growth": 16, "FCF quality": 24, "Balance sheet": 40, "Moat": 42, "Downside resilience": 24, "Innovation intensity": 68, "Valuation discipline": 32, "Cyclicality risk": 78, "Regulatory risk": 38},
+    {"Ticker": "ENVX", "Company": "Enovix", "Sector": "Industrials/Technology", "Industry": "Advanced batteries", "Cap tier": "Small cap", "Revenue growth": 30, "EPS/FCF growth": 28, "FCF quality": 18, "Balance sheet": 54, "Moat": 48, "Downside resilience": 22, "Innovation intensity": 82, "Valuation discipline": 24, "Cyclicality risk": 80, "Regulatory risk": 28},
+    {"Ticker": "ELF", "Company": "e.l.f. Beauty", "Sector": "Consumer", "Industry": "Digitally native beauty brand", "Cap tier": "Mid cap", "Revenue growth": 18, "EPS/FCF growth": 22, "FCF quality": 72, "Balance sheet": 78, "Moat": 66, "Downside resilience": 66, "Innovation intensity": 72, "Valuation discipline": 52, "Cyclicality risk": 48, "Regulatory risk": 14},
+    {"Ticker": "ONON", "Company": "On Holding", "Sector": "Consumer", "Industry": "Premium athletic footwear", "Cap tier": "Mid cap", "Revenue growth": 20, "EPS/FCF growth": 23, "FCF quality": 58, "Balance sheet": 82, "Moat": 62, "Downside resilience": 58, "Innovation intensity": 70, "Valuation discipline": 46, "Cyclicality risk": 56, "Regulatory risk": 14},
 ]
 
 
@@ -828,6 +848,7 @@ def watchlist_frame() -> pd.DataFrame:
 
 def innovator_frame(inputs: MarketInputs) -> pd.DataFrame:
     df = pd.DataFrame(INNOVATOR_UNIVERSE)
+    df["Cap tier"] = df["Cap tier"].fillna("Large/Mega cap")
     msft = df[df["Ticker"] == "MSFT"].iloc[0]
     msft_growth = (msft["Revenue growth"] + msft["EPS/FCF growth"]) / 2
     df["Growth vs MSFT %"] = ((df["Revenue growth"] + df["EPS/FCF growth"]) / 2 / msft_growth - 1) * 100
@@ -1673,9 +1694,9 @@ def plot_innovator_scatter(innovators: pd.DataFrame) -> go.Figure:
         x="Long-term downside risk",
         y="Growth vs MSFT %",
         size="Macro-adjusted innovator score",
-        color="Sector",
+        color="Cap tier",
         hover_name="Ticker",
-        hover_data=["Company", "Industry", "FCF quality", "Balance sheet", "Moat", "Innovator class"],
+        hover_data=["Company", "Sector", "Industry", "FCF quality", "Balance sheet", "Moat", "Innovator class"],
         title="Innovators: Microsoft-like or higher growth versus long-term downside risk",
     )
     fig.add_hline(y=0, line_dash="dot", line_color="#17212b", annotation_text="MSFT growth baseline")
@@ -1891,17 +1912,24 @@ def main() -> None:
             """,
             unsafe_allow_html=True,
         )
+        selected_cap_tiers = st.multiselect(
+            "Cap tiers",
+            options=sorted(innovators["Cap tier"].unique()),
+            default=[tier for tier in sorted(innovators["Cap tier"].unique()) if "Mid" in tier or "Small" in tier],
+        )
+        filtered_innovators = innovators[innovators["Cap tier"].isin(selected_cap_tiers)] if selected_cap_tiers else innovators
         left, right = st.columns([1.2, 1])
         with left:
-            st.plotly_chart(plot_innovator_scatter(innovators), width="stretch")
+            st.plotly_chart(plot_innovator_scatter(filtered_innovators), width="stretch")
         with right:
-            st.plotly_chart(plot_sector_innovators(innovators), width="stretch")
+            st.plotly_chart(plot_sector_innovators(filtered_innovators), width="stretch")
         st.subheader("Top Innovator Candidates")
         st.dataframe(
-            innovators[
+            filtered_innovators[
                 [
                     "Ticker",
                     "Company",
+                    "Cap tier",
                     "Sector",
                     "Industry",
                     "Growth vs MSFT %",
@@ -1918,7 +1946,7 @@ def main() -> None:
         )
         st.subheader("Sector And Industry Breakdown")
         st.dataframe(
-            innovators.groupby(["Sector", "Industry"], as_index=False)
+            filtered_innovators.groupby(["Cap tier", "Sector", "Industry"], as_index=False)
             .agg(
                 Candidates=("Ticker", "count"),
                 Avg_growth_vs_msft=("Growth vs MSFT %", "mean"),
