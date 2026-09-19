@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 from typing import Dict, Iterable
 
 import numpy as np
@@ -30,7 +31,7 @@ PALETTE = {
 }
 
 BACKTEST_START = "2001-01-01"
-BACKTEST_END = "2025-12-31"
+BACKTEST_END = date.today().isoformat()
 BACKTEST_INITIAL_VALUE = 10_000
 
 BENCHMARKS = {
@@ -1019,7 +1020,7 @@ def drawdown_and_gain_periods(value_frame: pd.DataFrame) -> pd.DataFrame:
                 "Ticker": asset,
                 "Greatest fall start": peak_date.strftime("%Y-%m-%d"),
                 "Greatest fall trough": trough_date.strftime("%Y-%m-%d"),
-                "Recovered by": recovery_date.strftime("%Y-%m-%d") if pd.notna(recovery_date) else "Not recovered by 2025",
+                "Recovered by": recovery_date.strftime("%Y-%m-%d") if pd.notna(recovery_date) else "Not recovered by latest data",
                 "Max drawdown %": drawdown.min() * 100,
                 "Persistent value fall months": fall_months,
                 "Recovery months": recovery_months,
@@ -1046,6 +1047,135 @@ def longest_streaks(returns: pd.Series) -> tuple[int, int]:
         gain_best = max(gain_best, gain_current)
         loss_best = max(loss_best, loss_current)
     return gain_best, loss_best
+
+
+def what_if_adjustment(asset: str, inputs: MarketInputs) -> tuple[float, float, str]:
+    watch = watchlist_frame().set_index("Ticker")
+    base_return = 7.0
+    base_volatility = 15.0
+    rate_sensitivity = 0.55
+    recession_sensitivity = 0.45
+    ai_sensitivity = 0.25
+    power_sensitivity = 0.15
+    risk_note = "Broad market beta and macro-cycle risk"
+
+    if asset in watch.index:
+        row = watch.loc[asset]
+        base_return = float(row["Historical CAGR"])
+        base_volatility = float(row["Volatility"])
+        rate_sensitivity = float(row["Rate sensitivity"])
+        recession_sensitivity = float(row["Recession sensitivity"])
+        ai_sensitivity = float(row["AI capex sensitivity"])
+        power_sensitivity = 0.55 if "power" in str(row["Theme"]).lower() or "construction" in str(row["Theme"]).lower() else 0.20
+        risk_note = greatest_risk(asset, base_volatility / 100, -0.35)
+    elif asset in {"IWF", "VUG"}:
+        base_return, base_volatility, rate_sensitivity, ai_sensitivity = 8.5, 18.0, 0.85, 0.45
+        risk_note = "Growth multiple compression if rates stay high"
+    elif asset == "VBIAX":
+        base_return, base_volatility, rate_sensitivity, recession_sensitivity = 6.0, 9.5, 0.35, 0.25
+        risk_note = "Stock/bond correlation shock and lower upside capture"
+    elif asset == "IWD":
+        base_return, base_volatility, rate_sensitivity, recession_sensitivity = 7.0, 16.0, 0.48, 0.55
+        risk_note = "Value cyclicality, financial exposure, and slower growth"
+    elif asset in {"^GSPC", "VTI"}:
+        base_return, base_volatility, rate_sensitivity, recession_sensitivity = 7.6, 15.5, 0.55, 0.45
+
+    adjusted_return = (
+        base_return
+        + (inputs.ai_capex_growth - 10) * 0.18 * ai_sensitivity
+        + (inputs.power_demand_growth - 7) * 0.14 * power_sensitivity
+        + inputs.liquidity_impulse * 0.55
+        + inputs.valuation_reset * 0.22 * rate_sensitivity
+        - max(inputs.ten_year_yield - 4.0, 0) * 1.75 * rate_sensitivity
+        - max(inputs.inflation - 2.5, 0) * 0.65
+        - inputs.recession_probability * 0.075 * recession_sensitivity
+        - max(inputs.credit_spread - 1.2, 0) * 0.75
+        - max(inputs.oil_price - 85, 0) * 0.025 * recession_sensitivity
+        - max(inputs.dollar_strength - 60, 0) * 0.035 * rate_sensitivity
+    )
+    adjusted_volatility = base_volatility * (
+        1
+        + inputs.recession_probability / 250
+        + max(inputs.credit_spread - 1.2, 0) / 10
+        + abs(inputs.valuation_reset) / 180
+    )
+    return float(adjusted_return), float(adjusted_volatility), risk_note
+
+
+def build_forward_what_if(
+    value_long: pd.DataFrame,
+    selected_stocks: list[str],
+    inputs: MarketInputs,
+    horizon_years: int,
+    paths: int = 120,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    base = value_long.pivot_table(index="Date", columns="Asset", values="Value", aggfunc="last").sort_index()
+    if base.empty:
+        return pd.DataFrame(), pd.DataFrame()
+    start_date = pd.Timestamp(base.index.max())
+    future_dates = pd.date_range(start=start_date + pd.offsets.MonthEnd(1), periods=horizon_years * 12, freq="ME")
+    assets = list(base.columns)
+    rng = np.random.default_rng(inputs.seed + horizon_years + len(selected_stocks))
+    rows = []
+    summary_rows = []
+
+    for asset_label_value in assets:
+        current_value = float(base[asset_label_value].dropna().iloc[-1])
+        ticker = reverse_asset_label(asset_label_value)
+        expected_return, volatility, risk_note = what_if_adjustment(ticker, inputs)
+        monthly_drift = (expected_return / 100 - 0.5 * (volatility / 100) ** 2) / 12
+        monthly_vol = volatility / 100 / np.sqrt(12)
+        terminal_values = []
+
+        for path_id in range(paths):
+            value = current_value
+            for date_value in future_dates:
+                shock = rng.normal(monthly_drift, monthly_vol)
+                value *= np.exp(shock)
+                rows.append(
+                    {
+                        "Date": date_value,
+                        "Asset": asset_label_value,
+                        "Path": path_id,
+                        "Value": value,
+                        "Expected annual return %": expected_return,
+                        "Expected annual volatility %": volatility,
+                    }
+                )
+            terminal_values.append(value)
+
+        terminal = np.array(terminal_values)
+        summary_rows.append(
+            {
+                "Asset": asset_label_value,
+                "Current value": current_value,
+                "Median terminal value": np.percentile(terminal, 50),
+                "Bear case p10": np.percentile(terminal, 10),
+                "Bull case p90": np.percentile(terminal, 90),
+                "Median forward return %": (np.percentile(terminal, 50) / current_value - 1) * 100,
+                "Probability of loss %": (terminal < current_value).mean() * 100,
+                "Expected annual return %": expected_return,
+                "Expected annual volatility %": volatility,
+                "Greatest forward risk": risk_note,
+            }
+        )
+
+    forward_paths = pd.DataFrame(rows)
+    percentiles = (
+        forward_paths.groupby(["Date", "Asset"])["Value"]
+        .quantile([0.1, 0.5, 0.9])
+        .unstack()
+        .rename(columns={0.1: "Bear case p10", 0.5: "Median", 0.9: "Bull case p90"})
+        .reset_index()
+    )
+    return percentiles, pd.DataFrame(summary_rows).sort_values("Median terminal value", ascending=False)
+
+
+def reverse_asset_label(label: str) -> str:
+    labels = {value: key for key, value in BENCHMARKS.items()}
+    reverse = {friendly: ticker for ticker, friendly in labels.items()}
+    reverse["Selected 5 equal-weight"] = "Selected 5 equal-weight"
+    return reverse.get(label, label)
 
 
 def build_evaluation(inputs: MarketInputs, scored: pd.DataFrame, portfolio: pd.DataFrame) -> pd.DataFrame:
@@ -1241,6 +1371,50 @@ def plot_drawdowns(value_long: pd.DataFrame) -> go.Figure:
     return fig
 
 
+def plot_forward_what_if(forward_percentiles: pd.DataFrame) -> go.Figure:
+    fig = go.Figure()
+    for asset in forward_percentiles["Asset"].unique():
+        frame = forward_percentiles[forward_percentiles["Asset"] == asset].sort_values("Date")
+        fig.add_trace(
+            go.Scatter(
+                x=frame["Date"],
+                y=frame["Bull case p90"],
+                mode="lines",
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=frame["Date"],
+                y=frame["Bear case p10"],
+                mode="lines",
+                fill="tonexty",
+                name=f"{asset} p10-p90",
+                line=dict(width=0),
+                opacity=0.18,
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=frame["Date"],
+                y=frame["Median"],
+                mode="lines",
+                name=f"{asset} median",
+                line=dict(width=2.2),
+            )
+        )
+    fig.update_layout(
+        title="Forward what-if simulation: median and p10/p90 range",
+        xaxis_title="Date",
+        yaxis_title="Projected value",
+        hovermode="x unified",
+        margin=dict(l=20, r=20, t=60, b=20),
+    )
+    return fig
+
+
 def verdict(eval_df: pd.DataFrame) -> str:
     counts = eval_df["Result"].value_counts().to_dict()
     if counts.get("Fail", 0):
@@ -1283,7 +1457,7 @@ def main() -> None:
     metric_cols[3].metric("10Y yield", f"{inputs.ten_year_yield:.2f}%")
     metric_cols[4].metric("AI capex growth", f"{inputs.ai_capex_growth:.0f}%")
 
-    tabs = st.tabs(["Scorecard", "Simulation", "2001-2025 Backtest", "Factors", "Market Surface", "Evaluation", "Data"])
+    tabs = st.tabs(["Scorecard", "Simulation", "2001-Today + What If", "Factors", "Market Surface", "Evaluation", "Data"])
 
     with tabs[0]:
         left, right = st.columns([1.25, 1])
@@ -1318,6 +1492,7 @@ def main() -> None:
 
     with tabs[2]:
         st.subheader("Compare Any 5 Stocks Against Market And JPM Proxy Benchmarks")
+        st.caption("Historical comparison runs from January 2001 through the latest available month, then extends with a forward what-if simulator.")
         default_backtest = ["GOOGL", "MSFT", "AMZN", "AVGO", "ETN"]
         selected_backtest = st.multiselect(
             "Choose up to 5 watchlist stocks",
@@ -1325,10 +1500,12 @@ def main() -> None:
             default=default_backtest,
             max_selections=5,
         )
+        forward_horizon = st.slider("Forward what-if horizon after latest data", 1, 15, 5, 1)
         if len(selected_backtest) != 5:
             st.warning("Select exactly 5 stocks to make the equal-weight comparison meaningful.")
         else:
             value_long, metrics, periods, data_source = build_historical_backtest(selected_backtest)
+            forward_percentiles, forward_summary = build_forward_what_if(value_long, selected_backtest, inputs, forward_horizon)
             selected_final = metrics.loc[metrics["Ticker"] == "Selected 5 equal-weight", "Final value"]
             sp_final = metrics.loc[metrics["Ticker"] == "^GSPC", "Final value"]
             selected_value = float(selected_final.iloc[0]) if not selected_final.empty else np.nan
@@ -1359,6 +1536,21 @@ def main() -> None:
             st.dataframe(metrics.round(2), width="stretch", hide_index=True)
             st.subheader("Greatest Value Fall And Persistent Gain/Loss Periods")
             st.dataframe(periods.round(2), width="stretch", hide_index=True)
+            st.subheader("Forward What-If Simulation")
+            st.markdown(
+                """
+                <p class='note'>
+                Forward projections use the current sidebar macro parameters. Higher yields, inflation,
+                recession probability, credit spreads, oil prices, dollar strength, and valuation-reset
+                pressure reduce expected returns; stronger AI capex, power demand, and liquidity improve
+                expected returns based on each asset's sensitivity profile.
+                </p>
+                """,
+                unsafe_allow_html=True,
+            )
+            if not forward_percentiles.empty:
+                st.plotly_chart(plot_forward_what_if(forward_percentiles), width="stretch")
+                st.dataframe(forward_summary.round(2), width="stretch", hide_index=True)
             st.subheader("Benchmark And JPM Strategy Proxy Map")
             st.dataframe(
                 pd.DataFrame(
@@ -1381,6 +1573,12 @@ def main() -> None:
                 "Download drawdown periods",
                 data=periods.to_csv(index=False),
                 file_name="finance_backtest_periods.csv",
+                mime="text/csv",
+            )
+            st.download_button(
+                "Download forward what-if summary",
+                data=forward_summary.to_csv(index=False),
+                file_name="finance_forward_what_if_summary.csv",
                 mime="text/csv",
             )
 

@@ -11,7 +11,8 @@ The app uses the same project pipeline pattern as the repression simulator:
 - a standalone `app.py`
 - sidebar scenario inputs
 - synthetic simulation engine
-- 2001-2025 historical backtest comparison
+- 2001-to-today historical backtest comparison
+- forward what-if simulator driven by market-condition parameters
 - 2D and 3D Plotly visualizations
 - evaluation scorecard
 - `eval_app.py` verification harness
@@ -37,10 +38,11 @@ External market inputs include 10-year Treasury yields, inflation, recession
 probability, AI capex growth, data-center power demand, credit spreads, dollar
 strength, oil prices, liquidity impulse, and valuation reset pressure.
 
-## Historical Backtest
+## Historical Backtest And Forward What-If
 
-The `2001-2025 Backtest` tab lets you choose any 5 stocks from the watchlist and
-compare a $10,000 equal-weight portfolio against:
+The `2001-Today + What If` tab lets you choose any 5 stocks from the watchlist
+and compare a $10,000 equal-weight portfolio from January 2001 through the
+latest available month against:
 
 - S&P 500 (`^GSPC`)
 - Vanguard Total Stock Market ETF (`VTI`)
@@ -64,10 +66,32 @@ The tab shows:
 - Drawdown chart showing persistent value-fall periods
 - Performance and risk profile table
 - Greatest fall, recovery, gain-streak, and losing-streak table
+- Forward what-if projection chart with median, p10 bear case, and p90 bull case
+- Forward risk summary with probability of loss and expected volatility
 
 When `yfinance` is installed and network access is available, the app uses
 adjusted monthly close data. If live data is unavailable, it falls back to
 deterministic synthetic monthly data so the app and eval harness still work.
+
+The forward what-if simulator extends the latest historical value using the
+sidebar macro parameters:
+
+- 10-year Treasury yield
+- inflation
+- recession probability
+- AI capex growth
+- data-center power demand growth
+- credit spread
+- dollar strength
+- oil price
+- liquidity impulse
+- market valuation reset
+
+Higher rates, inflation, recession probability, credit spreads, oil prices,
+dollar strength, and valuation-reset pressure reduce projected returns based on
+each asset's sensitivity profile. Stronger AI capex, power demand, and liquidity
+can improve projected returns. The projections are scenario analysis, not
+forecasts.
 
 ## Setup
 
