@@ -46,9 +46,42 @@ BENCHMARKS = {
 JPM_PROXY_MAP = {
     "JPMCAP / Core Advisory proxy": "VTI - Total Stock Market",
     "JPM U.S. Large Cap Growth proxy": "IWF - Russell 1000 Growth",
+    "JPM U.S. Large Cap Growth proxy / VUG alternate": "VUG - Large Cap Growth",
     "JPM Dynamic Multi-Asset proxy": "VBIAX - Balanced Index",
     "JPM Focused Equity Income proxy": "IWD - Russell 1000 Value",
 }
+
+JPM_PROXY_TICKERS = {
+    "JPMCAP - Core Advisory proxy (VTI)": "VTI",
+    "JPM U.S. Large Cap Growth proxy (IWF)": "IWF",
+    "JPM U.S. Large Cap Growth alternate (VUG)": "VUG",
+    "JPMPI - Dynamic Multi-Asset proxy (VBIAX)": "VBIAX",
+    "JPM Focused Equity Income proxy (IWD)": "IWD",
+}
+
+INNOVATOR_UNIVERSE = [
+    {"Ticker": "MSFT", "Company": "Microsoft", "Sector": "Technology", "Industry": "Cloud software", "Revenue growth": 15, "EPS/FCF growth": 18, "FCF quality": 95, "Balance sheet": 91, "Moat": 94, "Downside resilience": 88, "Innovation intensity": 90, "Valuation discipline": 66, "Cyclicality risk": 28, "Regulatory risk": 45},
+    {"Ticker": "GOOGL", "Company": "Alphabet", "Sector": "Communication Services", "Industry": "AI, search, cloud", "Revenue growth": 14, "EPS/FCF growth": 17, "FCF quality": 92, "Balance sheet": 92, "Moat": 92, "Downside resilience": 86, "Innovation intensity": 88, "Valuation discipline": 76, "Cyclicality risk": 32, "Regulatory risk": 58},
+    {"Ticker": "AMZN", "Company": "Amazon", "Sector": "Consumer/Technology", "Industry": "Cloud, ecommerce, ads", "Revenue growth": 12, "EPS/FCF growth": 22, "FCF quality": 78, "Balance sheet": 80, "Moat": 88, "Downside resilience": 78, "Innovation intensity": 86, "Valuation discipline": 70, "Cyclicality risk": 46, "Regulatory risk": 46},
+    {"Ticker": "AVGO", "Company": "Broadcom", "Sector": "Technology", "Industry": "AI silicon/networking", "Revenue growth": 18, "EPS/FCF growth": 21, "FCF quality": 90, "Balance sheet": 73, "Moat": 88, "Downside resilience": 76, "Innovation intensity": 85, "Valuation discipline": 68, "Cyclicality risk": 42, "Regulatory risk": 28},
+    {"Ticker": "ANET", "Company": "Arista Networks", "Sector": "Technology", "Industry": "Data-center networking", "Revenue growth": 19, "EPS/FCF growth": 20, "FCF quality": 86, "Balance sheet": 95, "Moat": 82, "Downside resilience": 78, "Innovation intensity": 86, "Valuation discipline": 61, "Cyclicality risk": 45, "Regulatory risk": 22},
+    {"Ticker": "NVDA", "Company": "NVIDIA", "Sector": "Technology", "Industry": "AI accelerators", "Revenue growth": 28, "EPS/FCF growth": 30, "FCF quality": 92, "Balance sheet": 92, "Moat": 94, "Downside resilience": 72, "Innovation intensity": 98, "Valuation discipline": 46, "Cyclicality risk": 62, "Regulatory risk": 38},
+    {"Ticker": "AMD", "Company": "Advanced Micro Devices", "Sector": "Technology", "Industry": "AI compute / CPUs", "Revenue growth": 18, "EPS/FCF growth": 24, "FCF quality": 72, "Balance sheet": 82, "Moat": 72, "Downside resilience": 66, "Innovation intensity": 88, "Valuation discipline": 56, "Cyclicality risk": 64, "Regulatory risk": 26},
+    {"Ticker": "TSM", "Company": "Taiwan Semiconductor", "Sector": "Technology", "Industry": "Semiconductor foundry", "Revenue growth": 16, "EPS/FCF growth": 18, "FCF quality": 82, "Balance sheet": 86, "Moat": 96, "Downside resilience": 74, "Innovation intensity": 92, "Valuation discipline": 70, "Cyclicality risk": 55, "Regulatory risk": 64},
+    {"Ticker": "ASML", "Company": "ASML", "Sector": "Technology", "Industry": "Semiconductor equipment", "Revenue growth": 13, "EPS/FCF growth": 16, "FCF quality": 86, "Balance sheet": 88, "Moat": 98, "Downside resilience": 78, "Innovation intensity": 94, "Valuation discipline": 66, "Cyclicality risk": 50, "Regulatory risk": 42},
+    {"Ticker": "SNOW", "Company": "Snowflake", "Sector": "Technology", "Industry": "Data cloud", "Revenue growth": 24, "EPS/FCF growth": 22, "FCF quality": 62, "Balance sheet": 90, "Moat": 70, "Downside resilience": 54, "Innovation intensity": 86, "Valuation discipline": 38, "Cyclicality risk": 58, "Regulatory risk": 20},
+    {"Ticker": "NOW", "Company": "ServiceNow", "Sector": "Technology", "Industry": "Enterprise workflow AI", "Revenue growth": 19, "EPS/FCF growth": 22, "FCF quality": 84, "Balance sheet": 82, "Moat": 84, "Downside resilience": 78, "Innovation intensity": 86, "Valuation discipline": 56, "Cyclicality risk": 38, "Regulatory risk": 18},
+    {"Ticker": "CRM", "Company": "Salesforce", "Sector": "Technology", "Industry": "Enterprise software / AI CRM", "Revenue growth": 10, "EPS/FCF growth": 16, "FCF quality": 88, "Balance sheet": 80, "Moat": 82, "Downside resilience": 80, "Innovation intensity": 76, "Valuation discipline": 72, "Cyclicality risk": 35, "Regulatory risk": 20},
+    {"Ticker": "PANW", "Company": "Palo Alto Networks", "Sector": "Technology", "Industry": "Cybersecurity", "Revenue growth": 16, "EPS/FCF growth": 20, "FCF quality": 82, "Balance sheet": 76, "Moat": 80, "Downside resilience": 76, "Innovation intensity": 84, "Valuation discipline": 58, "Cyclicality risk": 34, "Regulatory risk": 18},
+    {"Ticker": "CRWD", "Company": "CrowdStrike", "Sector": "Technology", "Industry": "Cloud security", "Revenue growth": 22, "EPS/FCF growth": 24, "FCF quality": 76, "Balance sheet": 86, "Moat": 78, "Downside resilience": 68, "Innovation intensity": 86, "Valuation discipline": 44, "Cyclicality risk": 42, "Regulatory risk": 16},
+    {"Ticker": "ETN", "Company": "Eaton", "Sector": "Industrials", "Industry": "Power management", "Revenue growth": 11, "EPS/FCF growth": 14, "FCF quality": 84, "Balance sheet": 82, "Moat": 78, "Downside resilience": 82, "Innovation intensity": 72, "Valuation discipline": 72, "Cyclicality risk": 38, "Regulatory risk": 22},
+    {"Ticker": "VRT", "Company": "Vertiv", "Sector": "Industrials", "Industry": "Data-center power/cooling", "Revenue growth": 20, "EPS/FCF growth": 25, "FCF quality": 76, "Balance sheet": 70, "Moat": 76, "Downside resilience": 66, "Innovation intensity": 82, "Valuation discipline": 58, "Cyclicality risk": 50, "Regulatory risk": 22},
+    {"Ticker": "GEV", "Company": "GE Vernova", "Sector": "Industrials/Energy", "Industry": "Grid and power equipment", "Revenue growth": 10, "EPS/FCF growth": 18, "FCF quality": 66, "Balance sheet": 72, "Moat": 74, "Downside resilience": 68, "Innovation intensity": 76, "Valuation discipline": 62, "Cyclicality risk": 46, "Regulatory risk": 35},
+    {"Ticker": "PWR", "Company": "Quanta Services", "Sector": "Industrials", "Industry": "Grid infrastructure", "Revenue growth": 12, "EPS/FCF growth": 15, "FCF quality": 72, "Balance sheet": 76, "Moat": 76, "Downside resilience": 74, "Innovation intensity": 70, "Valuation discipline": 68, "Cyclicality risk": 42, "Regulatory risk": 30},
+    {"Ticker": "LLY", "Company": "Eli Lilly", "Sector": "Healthcare", "Industry": "Biopharma innovation", "Revenue growth": 18, "EPS/FCF growth": 24, "FCF quality": 78, "Balance sheet": 76, "Moat": 90, "Downside resilience": 80, "Innovation intensity": 92, "Valuation discipline": 44, "Cyclicality risk": 20, "Regulatory risk": 48},
+    {"Ticker": "ISRG", "Company": "Intuitive Surgical", "Sector": "Healthcare", "Industry": "Robotic surgery", "Revenue growth": 14, "EPS/FCF growth": 17, "FCF quality": 88, "Balance sheet": 94, "Moat": 88, "Downside resilience": 82, "Innovation intensity": 86, "Valuation discipline": 58, "Cyclicality risk": 24, "Regulatory risk": 34},
+    {"Ticker": "TMO", "Company": "Thermo Fisher Scientific", "Sector": "Healthcare", "Industry": "Life-science tools", "Revenue growth": 8, "EPS/FCF growth": 12, "FCF quality": 84, "Balance sheet": 76, "Moat": 82, "Downside resilience": 78, "Innovation intensity": 72, "Valuation discipline": 70, "Cyclicality risk": 34, "Regulatory risk": 24},
+]
 
 
 WATCHLIST = [
@@ -793,6 +826,54 @@ def watchlist_frame() -> pd.DataFrame:
     return df
 
 
+def innovator_frame(inputs: MarketInputs) -> pd.DataFrame:
+    df = pd.DataFrame(INNOVATOR_UNIVERSE)
+    msft = df[df["Ticker"] == "MSFT"].iloc[0]
+    msft_growth = (msft["Revenue growth"] + msft["EPS/FCF growth"]) / 2
+    df["Growth vs MSFT %"] = ((df["Revenue growth"] + df["EPS/FCF growth"]) / 2 / msft_growth - 1) * 100
+    df["Quality compounder score"] = (
+        df["FCF quality"] * 0.20
+        + df["Balance sheet"] * 0.14
+        + df["Moat"] * 0.17
+        + df["Innovation intensity"] * 0.17
+        + df["Downside resilience"] * 0.16
+        + df["Valuation discipline"] * 0.10
+        + np.clip(df["Growth vs MSFT %"] + 50, 0, 100) * 0.06
+    )
+    df["Long-term downside risk"] = np.clip(
+        df["Cyclicality risk"] * 0.26
+        + df["Regulatory risk"] * 0.18
+        + (100 - df["FCF quality"]) * 0.18
+        + (100 - df["Balance sheet"]) * 0.14
+        + (100 - df["Valuation discipline"]) * 0.14
+        + max(inputs.ten_year_yield - 4, 0) * 3.0
+        + max(inputs.equity_risk_premium - 3.5, 0) * 2.5
+        + inputs.regulatory_pressure * 0.08
+        + inputs.geopolitical_risk * 0.04,
+        0,
+        100,
+    )
+    df["Macro-adjusted innovator score"] = np.clip(
+        df["Quality compounder score"]
+        + (inputs.ai_revenue_conversion - 50) * 0.04
+        + inputs.eps_revision * 0.22
+        + inputs.liquidity_impulse * 0.45
+        - df["Long-term downside risk"] * 0.22,
+        0,
+        100,
+    )
+    df["Innovator class"] = np.select(
+        [
+            (df["Growth vs MSFT %"] >= -10) & (df["Long-term downside risk"] <= 38) & (df["Macro-adjusted innovator score"] >= 68),
+            (df["Growth vs MSFT %"] >= 0) & (df["Macro-adjusted innovator score"] >= 64),
+            (df["Macro-adjusted innovator score"] >= 58),
+        ],
+        ["MSFT-like compounder", "Higher-growth innovator", "Watchlist innovator"],
+        default="Higher-risk innovator",
+    )
+    return df.sort_values(["Macro-adjusted innovator score", "Growth vs MSFT %"], ascending=False)
+
+
 def macro_adjusted_frame(inputs: MarketInputs) -> pd.DataFrame:
     df = watchlist_frame()
     rate_penalty = np.maximum(inputs.ten_year_yield - 4.0, 0) * 3.4 * df["Rate sensitivity"]
@@ -1047,6 +1128,9 @@ def build_historical_backtest(selected_stocks: list[str], initial_value: float =
         series["Selected 5 equal-weight"] = selected_portfolio
 
     value_frame = pd.DataFrame(series).sort_index()
+    for jpm_label, proxy_ticker in JPM_PROXY_TICKERS.items():
+        if proxy_ticker in value_frame:
+            value_frame[jpm_label] = value_frame[proxy_ticker]
     value_frame = value_frame.dropna(how="all")
     value_long = value_frame.reset_index().melt(id_vars="Date", var_name="Asset", value_name="Value").dropna()
     metrics = performance_metrics(value_frame)
@@ -1341,6 +1425,7 @@ def build_forward_what_if(
 def reverse_asset_label(label: str) -> str:
     labels = {value: key for key, value in BENCHMARKS.items()}
     reverse = {friendly: ticker for ticker, friendly in labels.items()}
+    reverse.update(JPM_PROXY_TICKERS)
     reverse["Selected 5 equal-weight"] = "Selected 5 equal-weight"
     return reverse.get(label, label)
 
@@ -1582,6 +1667,47 @@ def plot_forward_what_if(forward_percentiles: pd.DataFrame) -> go.Figure:
     return fig
 
 
+def plot_innovator_scatter(innovators: pd.DataFrame) -> go.Figure:
+    fig = px.scatter(
+        innovators,
+        x="Long-term downside risk",
+        y="Growth vs MSFT %",
+        size="Macro-adjusted innovator score",
+        color="Sector",
+        hover_name="Ticker",
+        hover_data=["Company", "Industry", "FCF quality", "Balance sheet", "Moat", "Innovator class"],
+        title="Innovators: Microsoft-like or higher growth versus long-term downside risk",
+    )
+    fig.add_hline(y=0, line_dash="dot", line_color="#17212b", annotation_text="MSFT growth baseline")
+    fig.update_layout(xaxis_title="Lower is better: long-term downside risk", yaxis_title="Growth vs MSFT", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def plot_sector_innovators(innovators: pd.DataFrame) -> go.Figure:
+    sector_frame = (
+        innovators.groupby("Sector", as_index=False)
+        .agg(
+            Avg_score=("Macro-adjusted innovator score", "mean"),
+            Avg_growth_vs_msft=("Growth vs MSFT %", "mean"),
+            Avg_downside_risk=("Long-term downside risk", "mean"),
+            Count=("Ticker", "count"),
+        )
+        .sort_values("Avg_score", ascending=False)
+    )
+    fig = px.bar(
+        sector_frame,
+        x="Avg_score",
+        y="Sector",
+        orientation="h",
+        color="Avg_downside_risk",
+        color_continuous_scale=[[0, PALETTE["green"]], [0.55, PALETTE["amber"]], [1, PALETTE["red"]]],
+        title="Sectorwise innovator potential and downside risk",
+        hover_data=["Avg_growth_vs_msft", "Count"],
+    )
+    fig.update_layout(xaxis_title="Average innovator score", yaxis_title="", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
 def verdict(eval_df: pd.DataFrame) -> str:
     counts = eval_df["Result"].value_counts().to_dict()
     if counts.get("Fail", 0):
@@ -1595,6 +1721,7 @@ def main() -> None:
     inject_theme()
     inputs = get_inputs()
     scored = macro_adjusted_frame(inputs)
+    innovators = innovator_frame(inputs)
     paths, portfolio = simulate_paths(inputs)
     eval_df = build_evaluation(inputs, scored, portfolio)
 
@@ -1624,7 +1751,7 @@ def main() -> None:
     metric_cols[3].metric("10Y yield", f"{inputs.ten_year_yield:.2f}%")
     metric_cols[4].metric("AI capex growth", f"{inputs.ai_capex_growth:.0f}%")
 
-    tabs = st.tabs(["Scorecard", "Simulation", "2001-Today + What If", "Factors", "Market Surface", "Evaluation", "Data"])
+    tabs = st.tabs(["Scorecard", "Simulation", "2001-Today + What If", "Innovators", "Factors", "Market Surface", "Evaluation", "Data"])
 
     with tabs[0]:
         left, right = st.columns([1.25, 1])
@@ -1681,7 +1808,7 @@ def main() -> None:
             st.caption(
                 f"Data source: {data_source}. The JPM strategies are represented by public proxies: "
                 f"JPMCAP -> VTI, U.S. Large Cap Growth -> IWF/VUG, Dynamic Multi-Asset -> VBIAX, "
-                f"Focused Equity Income -> IWD."
+                f"Focused Equity Income -> IWD. JPM proxy labels are included as separate comparison lines."
             )
             metric_cols = st.columns(4)
             metric_cols[0].metric("Initial investment", money(BACKTEST_INITIAL_VALUE))
@@ -1753,6 +1880,58 @@ def main() -> None:
             )
 
     with tabs[3]:
+        st.subheader("Sectorwise Innovators With Microsoft-Like Growth And Lower Downside Risk")
+        st.markdown(
+            """
+            <p class='note'>
+            This model ranks potential innovators by growth relative to Microsoft, FCF quality, balance-sheet
+            strength, moat, innovation intensity, valuation discipline, and long-term downside risk. It is a
+            screening model, not a buy list.
+            </p>
+            """,
+            unsafe_allow_html=True,
+        )
+        left, right = st.columns([1.2, 1])
+        with left:
+            st.plotly_chart(plot_innovator_scatter(innovators), width="stretch")
+        with right:
+            st.plotly_chart(plot_sector_innovators(innovators), width="stretch")
+        st.subheader("Top Innovator Candidates")
+        st.dataframe(
+            innovators[
+                [
+                    "Ticker",
+                    "Company",
+                    "Sector",
+                    "Industry",
+                    "Growth vs MSFT %",
+                    "Macro-adjusted innovator score",
+                    "Long-term downside risk",
+                    "FCF quality",
+                    "Balance sheet",
+                    "Moat",
+                    "Innovator class",
+                ]
+            ].round(2),
+            width="stretch",
+            hide_index=True,
+        )
+        st.subheader("Sector And Industry Breakdown")
+        st.dataframe(
+            innovators.groupby(["Sector", "Industry"], as_index=False)
+            .agg(
+                Candidates=("Ticker", "count"),
+                Avg_growth_vs_msft=("Growth vs MSFT %", "mean"),
+                Avg_score=("Macro-adjusted innovator score", "mean"),
+                Avg_downside_risk=("Long-term downside risk", "mean"),
+            )
+            .sort_values("Avg_score", ascending=False)
+            .round(2),
+            width="stretch",
+            hide_index=True,
+        )
+
+    with tabs[4]:
         st.plotly_chart(plot_factor_heatmap(scored), width="stretch")
         st.markdown(
             """
@@ -1765,10 +1944,10 @@ def main() -> None:
             unsafe_allow_html=True,
         )
 
-    with tabs[4]:
+    with tabs[5]:
         st.plotly_chart(plot_3d_surface(inputs), width="stretch")
 
-    with tabs[5]:
+    with tabs[6]:
         result = verdict(eval_df)
         if result.startswith("Fail"):
             st.error(result)
@@ -1782,9 +1961,11 @@ def main() -> None:
         with right:
             st.dataframe(eval_df, width="stretch", hide_index=True)
 
-    with tabs[6]:
+    with tabs[7]:
         st.subheader("Scenario-adjusted watchlist")
         st.dataframe(scored.round(2), width="stretch", hide_index=True)
+        st.subheader("Innovator screen")
+        st.dataframe(innovators.round(2), width="stretch", hide_index=True)
         st.subheader("Portfolio path")
         st.dataframe(portfolio.round(2), width="stretch", hide_index=True)
         st.download_button(

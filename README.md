@@ -13,6 +13,8 @@ The app uses the same project pipeline pattern as the repression simulator:
 - synthetic simulation engine
 - 2001-to-today historical backtest comparison
 - forward what-if simulator driven by market-condition parameters
+- JPM strategy proxy benchmark lines
+- sectorwise innovator screen
 - 2D and 3D Plotly visualizations
 - evaluation scorecard
 - `eval_app.py` verification harness
@@ -58,6 +60,10 @@ observable proxies:
 - J.P. Morgan U.S. Large Cap Growth Strategy -> `IWF` or `VUG`
 - J.P. Morgan Dynamic Multi-Asset Strategy -> `VBIAX`
 - J.P. Morgan Focused Equity Income -> `IWD`
+
+The JPM proxy labels are included as separate benchmark lines and table rows, so
+you can compare both the public ETF ticker and the corresponding JPM strategy
+proxy label.
 
 The tab shows:
 
@@ -110,6 +116,38 @@ sensitivity profile. Stronger EPS revisions, AI capex, AI revenue conversion,
 power demand, consumer health, housing, semiconductor cycle, yield-curve
 normalization, and liquidity can improve projected returns. The projections are
 scenario analysis, not forecasts.
+
+## Innovators Tab
+
+The `Innovators` tab adds a sector and industry screen for companies that may
+have Microsoft-like or higher growth characteristics with lower long-term
+downside risk.
+
+The screen compares candidates across:
+
+- revenue growth and EPS/FCF growth versus Microsoft
+- FCF quality
+- balance-sheet strength
+- moat
+- innovation intensity
+- valuation discipline
+- downside resilience
+- cyclicality risk
+- regulatory risk
+- current macro inputs from the sidebar
+
+The output includes:
+
+- scatter plot of growth versus long-term downside risk
+- sectorwise innovator potential chart
+- ranked table of innovator candidates
+- sector and industry summary table
+
+The innovator universe includes the original watchlist names plus broader
+technology, AI infrastructure, cybersecurity, healthcare innovation, and grid
+infrastructure candidates such as `NVDA`, `AMD`, `TSM`, `ASML`, `NOW`, `CRM`,
+`PANW`, `CRWD`, `LLY`, and `ISRG`. The list is a model-driven research screen,
+not a buy recommendation.
 
 ## Setup
 

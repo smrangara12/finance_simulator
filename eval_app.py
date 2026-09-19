@@ -7,6 +7,7 @@ from app import (
     build_evaluation,
     build_forward_what_if,
     build_historical_backtest,
+    innovator_frame,
     macro_adjusted_frame,
     preset_values,
     simulate_paths,
@@ -59,14 +60,17 @@ def run_model_evals() -> None:
     for preset in presets:
         inputs = inputs_from_preset(preset)
         scored = macro_adjusted_frame(inputs)
+        innovators = innovator_frame(inputs)
         paths, portfolio = simulate_paths(inputs)
         eval_df = build_evaluation(inputs, scored, portfolio)
 
         assert not scored.empty, f"{preset}: scored frame is empty"
         assert not paths.empty, f"{preset}: paths frame is empty"
         assert not portfolio.empty, f"{preset}: portfolio frame is empty"
+        assert not innovators.empty, f"{preset}: innovator frame is empty"
         assert not eval_df.empty, f"{preset}: eval frame is empty"
         assert scored["Scenario score"].between(0, 100).all(), f"{preset}: scenario scores out of range"
+        assert innovators["Macro-adjusted innovator score"].between(0, 100).all(), f"{preset}: innovator scores out of range"
         assert portfolio["Portfolio value"].iloc[-1] > 0, f"{preset}: portfolio value must stay positive"
         assert set(eval_df["Result"]).issubset({"Pass", "Warn", "Fail"}), f"{preset}: invalid eval result"
 
