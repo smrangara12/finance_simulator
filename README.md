@@ -77,21 +77,39 @@ The forward what-if simulator extends the latest historical value using the
 sidebar macro parameters:
 
 - 10-year Treasury yield
+- Fed policy path for cuts or hikes
+- Yield curve slope
 - inflation
 - recession probability
+- forward EPS revision
+- equity risk premium
+- labor market stress
+- consumer health
+- housing cycle strength
 - AI capex growth
+- AI revenue conversion quality
 - data-center power demand growth
+- semiconductor cycle strength
 - credit spread
+- Treasury issuance / deficit pressure
+- volatility regime
 - dollar strength
 - oil price
 - liquidity impulse
 - market valuation reset
+- tariff / trade pressure
+- tax policy pressure
+- regulatory / antitrust pressure
+- geopolitical risk
 
-Higher rates, inflation, recession probability, credit spreads, oil prices,
-dollar strength, and valuation-reset pressure reduce projected returns based on
-each asset's sensitivity profile. Stronger AI capex, power demand, and liquidity
-can improve projected returns. The projections are scenario analysis, not
-forecasts.
+Higher rates, inflation, recession probability, credit spreads, equity risk
+premium, Treasury issuance pressure, volatility, oil prices, dollar strength,
+labor stress, tariffs, tax pressure, regulatory pressure, geopolitical risk,
+and valuation-reset pressure reduce projected returns based on each asset's
+sensitivity profile. Stronger EPS revisions, AI capex, AI revenue conversion,
+power demand, consumer health, housing, semiconductor cycle, yield-curve
+normalization, and liquidity can improve projected returns. The projections are
+scenario analysis, not forecasts.
 
 ## Setup
 

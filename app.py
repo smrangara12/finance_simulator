@@ -460,6 +460,21 @@ class MarketInputs:
     oil_price: float
     liquidity_impulse: float
     valuation_reset: float
+    fed_policy_path: float
+    yield_curve_slope: float
+    eps_revision: float
+    equity_risk_premium: float
+    labor_market_stress: float
+    consumer_health: float
+    housing_cycle: float
+    treasury_issuance_pressure: float
+    volatility_regime: float
+    ai_revenue_conversion: float
+    semiconductor_cycle: float
+    tariff_pressure: float
+    tax_policy_pressure: float
+    regulatory_pressure: float
+    geopolitical_risk: float
     seed: int
 
 
@@ -614,7 +629,75 @@ def preset_values(name: str) -> Dict[str, float]:
             "valuation_reset": -2,
         },
     }
-    return presets[name]
+    extra_defaults = {
+        "fed_policy_path": -0.5,
+        "yield_curve_slope": 0.2,
+        "eps_revision": 3.0,
+        "equity_risk_premium": 3.5,
+        "labor_market_stress": 25.0,
+        "consumer_health": 65.0,
+        "housing_cycle": 50.0,
+        "treasury_issuance_pressure": 55.0,
+        "volatility_regime": 18.0,
+        "ai_revenue_conversion": 65.0,
+        "semiconductor_cycle": 55.0,
+        "tariff_pressure": 20.0,
+        "tax_policy_pressure": 25.0,
+        "regulatory_pressure": 30.0,
+        "geopolitical_risk": 35.0,
+    }
+    scenario_overrides = {
+        "Sticky inflation and 5% rates": {
+            "fed_policy_path": 0.3,
+            "yield_curve_slope": -0.4,
+            "eps_revision": -2.0,
+            "equity_risk_premium": 4.4,
+            "consumer_health": 48.0,
+            "treasury_issuance_pressure": 72.0,
+            "volatility_regime": 24.0,
+            "tariff_pressure": 35.0,
+        },
+        "Recession/liquidity squeeze": {
+            "fed_policy_path": -1.2,
+            "yield_curve_slope": -0.8,
+            "eps_revision": -8.0,
+            "equity_risk_premium": 5.0,
+            "labor_market_stress": 68.0,
+            "consumer_health": 32.0,
+            "housing_cycle": 25.0,
+            "volatility_regime": 34.0,
+            "geopolitical_risk": 50.0,
+        },
+        "Rate cuts and growth rebound": {
+            "fed_policy_path": -1.5,
+            "yield_curve_slope": 0.9,
+            "eps_revision": 7.0,
+            "equity_risk_premium": 3.0,
+            "labor_market_stress": 18.0,
+            "consumer_health": 76.0,
+            "housing_cycle": 68.0,
+            "volatility_regime": 14.0,
+            "ai_revenue_conversion": 74.0,
+        },
+        "AI capex digestion": {
+            "eps_revision": -3.0,
+            "ai_revenue_conversion": 38.0,
+            "semiconductor_cycle": 35.0,
+            "regulatory_pressure": 40.0,
+            "volatility_regime": 24.0,
+        },
+        "Grid and defense rotation": {
+            "power_demand_growth": 17,
+            "eps_revision": 4.0,
+            "housing_cycle": 56.0,
+            "treasury_issuance_pressure": 58.0,
+            "regulatory_pressure": 38.0,
+            "geopolitical_risk": 62.0,
+        },
+    }
+    values = {**extra_defaults, **presets[name]}
+    values.update(scenario_overrides.get(name, {}))
+    return values
 
 
 def get_inputs() -> MarketInputs:
@@ -636,15 +719,34 @@ def get_inputs() -> MarketInputs:
 
     with st.sidebar.expander("Rates and macro", expanded=True):
         ten_year_yield = st.slider("10-year Treasury yield (%)", 2.0, 7.0, values["ten_year_yield"], 0.05)
+        fed_policy_path = st.slider("Fed policy path: cuts/hikes next 12m (%)", -3.0, 3.0, float(values["fed_policy_path"]), 0.1)
+        yield_curve_slope = st.slider("Yield curve slope, 10Y-2Y (%)", -2.0, 3.0, float(values["yield_curve_slope"]), 0.1)
         inflation = st.slider("Inflation (%)", 0.0, 8.0, values["inflation"], 0.1)
         recession_probability = st.slider("Recession probability (%)", 0.0, 90.0, float(values["recession_probability"]), 1.0)
         credit_spread = st.slider("Credit spread (%)", 0.5, 5.0, float(values["credit_spread"]), 0.1)
         liquidity_impulse = st.slider("Liquidity impulse (%)", -6.0, 6.0, float(values["liquidity_impulse"]), 0.1)
+        equity_risk_premium = st.slider("Equity risk premium (%)", 2.0, 7.0, float(values["equity_risk_premium"]), 0.1)
+        treasury_issuance_pressure = st.slider("Treasury issuance / deficit pressure", 0.0, 100.0, float(values["treasury_issuance_pressure"]), 1.0)
+        volatility_regime = st.slider("Volatility regime / VIX proxy", 8.0, 50.0, float(values["volatility_regime"]), 1.0)
 
     with st.sidebar.expander("AI and physical infrastructure", expanded=True):
         ai_capex_growth = st.slider("AI capex growth (%)", -10.0, 45.0, float(values["ai_capex_growth"]), 1.0)
+        ai_revenue_conversion = st.slider("AI revenue conversion quality", 0.0, 100.0, float(values["ai_revenue_conversion"]), 1.0)
         power_demand_growth = st.slider("Data-center power demand growth (%)", -5.0, 30.0, float(values["power_demand_growth"]), 1.0)
+        semiconductor_cycle = st.slider("Semiconductor cycle strength", 0.0, 100.0, float(values["semiconductor_cycle"]), 1.0)
         valuation_reset = st.slider("Market valuation reset (%)", -35.0, 25.0, float(values["valuation_reset"]), 1.0)
+
+    with st.sidebar.expander("Economy and earnings", expanded=False):
+        eps_revision = st.slider("Forward EPS revision (%)", -20.0, 20.0, float(values["eps_revision"]), 0.5)
+        labor_market_stress = st.slider("Labor market stress", 0.0, 100.0, float(values["labor_market_stress"]), 1.0)
+        consumer_health = st.slider("Consumer health", 0.0, 100.0, float(values["consumer_health"]), 1.0)
+        housing_cycle = st.slider("Housing cycle strength", 0.0, 100.0, float(values["housing_cycle"]), 1.0)
+
+    with st.sidebar.expander("Policy and geopolitical risk", expanded=False):
+        tariff_pressure = st.slider("Tariff / trade pressure", 0.0, 100.0, float(values["tariff_pressure"]), 1.0)
+        tax_policy_pressure = st.slider("Tax policy pressure", 0.0, 100.0, float(values["tax_policy_pressure"]), 1.0)
+        regulatory_pressure = st.slider("Regulatory / antitrust pressure", 0.0, 100.0, float(values["regulatory_pressure"]), 1.0)
+        geopolitical_risk = st.slider("Geopolitical risk", 0.0, 100.0, float(values["geopolitical_risk"]), 1.0)
 
     with st.sidebar.expander("External market inputs", expanded=False):
         dollar_strength = st.slider("Dollar strength index", 20.0, 100.0, float(values["dollar_strength"]), 1.0)
@@ -664,6 +766,21 @@ def get_inputs() -> MarketInputs:
         oil_price=float(oil_price),
         liquidity_impulse=float(liquidity_impulse),
         valuation_reset=float(valuation_reset),
+        fed_policy_path=float(fed_policy_path),
+        yield_curve_slope=float(yield_curve_slope),
+        eps_revision=float(eps_revision),
+        equity_risk_premium=float(equity_risk_premium),
+        labor_market_stress=float(labor_market_stress),
+        consumer_health=float(consumer_health),
+        housing_cycle=float(housing_cycle),
+        treasury_issuance_pressure=float(treasury_issuance_pressure),
+        volatility_regime=float(volatility_regime),
+        ai_revenue_conversion=float(ai_revenue_conversion),
+        semiconductor_cycle=float(semiconductor_cycle),
+        tariff_pressure=float(tariff_pressure),
+        tax_policy_pressure=float(tax_policy_pressure),
+        regulatory_pressure=float(regulatory_pressure),
+        geopolitical_risk=float(geopolitical_risk),
         seed=int(seed),
     )
 
@@ -688,18 +805,48 @@ def macro_adjusted_frame(inputs: MarketInputs) -> pd.DataFrame:
     valuation_boost = inputs.valuation_reset * (100 - df["Valuation discipline"]) / 100
     oil_penalty = np.maximum(inputs.oil_price - 85, 0) * 0.05 * df["Recession sensitivity"]
     dollar_penalty = np.maximum(inputs.dollar_strength - 60, 0) * 0.08 * df["Rate sensitivity"]
+    fed_boost = -inputs.fed_policy_path * 1.15 * df["Rate sensitivity"]
+    curve_boost = inputs.yield_curve_slope * 0.85
+    eps_boost = inputs.eps_revision * 0.55
+    erp_penalty = np.maximum(inputs.equity_risk_premium - 3.5, 0) * 2.2 * df["Rate sensitivity"]
+    labor_penalty = np.maximum(inputs.labor_market_stress - 35, 0) * 0.07 * df["Recession sensitivity"]
+    consumer_boost = (inputs.consumer_health - 50) * 0.045 * (1 - df["Recession sensitivity"] / 2)
+    housing_boost = (inputs.housing_cycle - 50) * 0.03
+    treasury_penalty = np.maximum(inputs.treasury_issuance_pressure - 55, 0) * 0.035 * df["Rate sensitivity"]
+    volatility_penalty = np.maximum(inputs.volatility_regime - 18, 0) * 0.11
+    ai_conversion_boost = (inputs.ai_revenue_conversion - 50) * 0.075 * df["AI capex sensitivity"]
+    semi_boost = (inputs.semiconductor_cycle - 50) * 0.055 * df["Theme"].str.contains("networking|Optical|storage|PCB|connectivity", case=False).astype(float)
+    tariff_penalty = inputs.tariff_pressure * 0.025 * df["Recession sensitivity"]
+    tax_penalty = inputs.tax_policy_pressure * 0.025 * (df["FCF quality"] / 100)
+    regulatory_penalty = inputs.regulatory_pressure * 0.035 * df["Theme"].str.contains("AI|Cloud|cloud", case=False).astype(float)
+    geopolitical_boost = inputs.geopolitical_risk * 0.02 * df["Theme"].str.contains("defense|aerospace|PCB", case=False).astype(float)
 
     df["Macro adjustment"] = (
         ai_boost
         + power_boost
         + liquidity_boost
         + valuation_boost
+        + fed_boost
+        + curve_boost
+        + eps_boost
+        + consumer_boost
+        + housing_boost
+        + ai_conversion_boost
+        + semi_boost
+        + geopolitical_boost
         - rate_penalty
         - inflation_penalty
         - recession_penalty
         - credit_penalty
         - oil_penalty
         - dollar_penalty
+        - erp_penalty
+        - labor_penalty
+        - treasury_penalty
+        - volatility_penalty
+        - tariff_penalty
+        - tax_penalty
+        - regulatory_penalty
     )
     df["Scenario score"] = clamp(df["Factor score"] + df["Macro adjustment"], 0, 100)
     df["Risk score"] = clamp(
@@ -1057,6 +1204,8 @@ def what_if_adjustment(asset: str, inputs: MarketInputs) -> tuple[float, float, 
     recession_sensitivity = 0.45
     ai_sensitivity = 0.25
     power_sensitivity = 0.15
+    semi_sensitivity = 0.10
+    regulatory_sensitivity = 0.25
     risk_note = "Broad market beta and macro-cycle risk"
 
     if asset in watch.index:
@@ -1067,6 +1216,8 @@ def what_if_adjustment(asset: str, inputs: MarketInputs) -> tuple[float, float, 
         recession_sensitivity = float(row["Recession sensitivity"])
         ai_sensitivity = float(row["AI capex sensitivity"])
         power_sensitivity = 0.55 if "power" in str(row["Theme"]).lower() or "construction" in str(row["Theme"]).lower() else 0.20
+        semi_sensitivity = 0.65 if any(term in str(row["Theme"]).lower() for term in ["networking", "optical", "storage", "pcb", "connectivity"]) else 0.10
+        regulatory_sensitivity = 0.55 if any(term in str(row["Theme"]).lower() for term in ["ai", "cloud"]) else 0.20
         risk_note = greatest_risk(asset, base_volatility / 100, -0.35)
     elif asset in {"IWF", "VUG"}:
         base_return, base_volatility, rate_sensitivity, ai_sensitivity = 8.5, 18.0, 0.85, 0.45
@@ -1086,18 +1237,34 @@ def what_if_adjustment(asset: str, inputs: MarketInputs) -> tuple[float, float, 
         + (inputs.power_demand_growth - 7) * 0.14 * power_sensitivity
         + inputs.liquidity_impulse * 0.55
         + inputs.valuation_reset * 0.22 * rate_sensitivity
+        - inputs.fed_policy_path * 0.85 * rate_sensitivity
+        + inputs.yield_curve_slope * 0.45
+        + inputs.eps_revision * 0.35
+        + (inputs.consumer_health - 50) * 0.055 * (1 - recession_sensitivity / 2)
+        + (inputs.housing_cycle - 50) * 0.025
+        + (inputs.ai_revenue_conversion - 50) * 0.055 * ai_sensitivity
+        + (inputs.semiconductor_cycle - 50) * 0.045 * semi_sensitivity
+        + inputs.geopolitical_risk * 0.018 * semi_sensitivity
         - max(inputs.ten_year_yield - 4.0, 0) * 1.75 * rate_sensitivity
         - max(inputs.inflation - 2.5, 0) * 0.65
         - inputs.recession_probability * 0.075 * recession_sensitivity
         - max(inputs.credit_spread - 1.2, 0) * 0.75
         - max(inputs.oil_price - 85, 0) * 0.025 * recession_sensitivity
         - max(inputs.dollar_strength - 60, 0) * 0.035 * rate_sensitivity
+        - max(inputs.equity_risk_premium - 3.5, 0) * 1.15 * rate_sensitivity
+        - max(inputs.labor_market_stress - 35, 0) * 0.045 * recession_sensitivity
+        - max(inputs.treasury_issuance_pressure - 55, 0) * 0.035 * rate_sensitivity
+        - inputs.tariff_pressure * 0.018 * recession_sensitivity
+        - inputs.tax_policy_pressure * 0.018
+        - inputs.regulatory_pressure * 0.026 * regulatory_sensitivity
     )
     adjusted_volatility = base_volatility * (
         1
         + inputs.recession_probability / 250
         + max(inputs.credit_spread - 1.2, 0) / 10
         + abs(inputs.valuation_reset) / 180
+        + max(inputs.volatility_regime - 18, 0) / 90
+        + max(inputs.geopolitical_risk - 40, 0) / 280
     )
     return float(adjusted_return), float(adjusted_volatility), risk_note
 
@@ -1541,9 +1708,12 @@ def main() -> None:
                 """
                 <p class='note'>
                 Forward projections use the current sidebar macro parameters. Higher yields, inflation,
-                recession probability, credit spreads, oil prices, dollar strength, and valuation-reset
-                pressure reduce expected returns; stronger AI capex, power demand, and liquidity improve
-                expected returns based on each asset's sensitivity profile.
+                recession probability, credit spreads, equity risk premium, Treasury issuance pressure,
+                volatility, oil prices, dollar strength, labor stress, tariffs, tax pressure, regulatory
+                pressure, and valuation-reset pressure reduce expected returns; stronger EPS revisions,
+                AI revenue conversion, AI capex, power demand, consumer health, housing, semiconductor
+                cycle, yield-curve normalization, and liquidity improve expected returns based on each
+                asset's sensitivity profile.
                 </p>
                 """,
                 unsafe_allow_html=True,
