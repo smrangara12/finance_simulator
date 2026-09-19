@@ -29,6 +29,26 @@ PALETTE = {
     "teal": "#237b7b",
 }
 
+BACKTEST_START = "2001-01-01"
+BACKTEST_END = "2025-12-31"
+BACKTEST_INITIAL_VALUE = 10_000
+
+BENCHMARKS = {
+    "S&P 500": "^GSPC",
+    "VTI - Total Stock Market": "VTI",
+    "IWF - Russell 1000 Growth": "IWF",
+    "VUG - Large Cap Growth": "VUG",
+    "VBIAX - Balanced Index": "VBIAX",
+    "IWD - Russell 1000 Value": "IWD",
+}
+
+JPM_PROXY_MAP = {
+    "JPMCAP / Core Advisory proxy": "VTI - Total Stock Market",
+    "JPM U.S. Large Cap Growth proxy": "IWF - Russell 1000 Growth",
+    "JPM Dynamic Multi-Asset proxy": "VBIAX - Balanced Index",
+    "JPM Focused Equity Income proxy": "IWD - Russell 1000 Value",
+}
+
 
 WATCHLIST = [
     {
@@ -776,6 +796,258 @@ def build_portfolio_path(inputs: MarketInputs, paths: pd.DataFrame, scored: pd.D
     return portfolio
 
 
+def available_watchlist_tickers() -> list[str]:
+    return [item["Ticker"] for item in WATCHLIST]
+
+
+def synthetic_monthly_prices(tickers: list[str], start: str = BACKTEST_START, end: str = BACKTEST_END) -> pd.DataFrame:
+    dates = pd.date_range(start=start, end=end, freq="ME")
+    rows = []
+    watch = watchlist_frame().set_index("Ticker")
+    benchmark_profiles = {
+        "^GSPC": (7.6, 15.0),
+        "VTI": (7.8, 15.5),
+        "IWF": (8.6, 18.0),
+        "VUG": (8.8, 18.5),
+        "VBIAX": (6.1, 9.5),
+        "IWD": (7.0, 16.0),
+    }
+    crisis_shocks = {
+        2001: -0.025,
+        2002: -0.030,
+        2008: -0.060,
+        2020: -0.045,
+        2022: -0.035,
+    }
+
+    for ticker in tickers:
+        if ticker in watch.index:
+            cagr = float(watch.loc[ticker, "Historical CAGR"])
+            volatility = float(watch.loc[ticker, "Volatility"])
+        else:
+            cagr, volatility = benchmark_profiles.get(ticker, (7.0, 16.0))
+        rng = np.random.default_rng(sum(ord(char) for char in ticker) + 2001)
+        price = 100.0
+        for date in dates:
+            drift = (cagr / 100 - 0.5 * (volatility / 100) ** 2) / 12
+            shock = crisis_shocks.get(date.year, 0.0) if date.month in {2, 3, 9, 10} else 0.0
+            cycle = 0.004 * np.sin((date.year - 2001) / 1.8 + len(ticker))
+            monthly_return = rng.normal(drift + cycle + shock, volatility / 100 / np.sqrt(12))
+            price *= np.exp(monthly_return)
+            rows.append({"Date": date, "Ticker": ticker, "Adj Close": price, "Source": "synthetic fallback"})
+    return pd.DataFrame(rows)
+
+
+@st.cache_data(show_spinner=False)
+def load_monthly_prices(tickers: tuple[str, ...], start: str = BACKTEST_START, end: str = BACKTEST_END) -> tuple[pd.DataFrame, str]:
+    ticker_list = list(dict.fromkeys(tickers))
+    try:
+        import yfinance as yf
+
+        raw = yf.download(
+            ticker_list,
+            start=start,
+            end=end,
+            auto_adjust=True,
+            progress=False,
+            group_by="ticker",
+            threads=True,
+        )
+        if raw.empty:
+            raise RuntimeError("yfinance returned no rows")
+
+        if len(ticker_list) == 1:
+            prices = raw[["Close"]].rename(columns={"Close": ticker_list[0]})
+        else:
+            prices = pd.DataFrame({ticker: raw[ticker]["Close"] for ticker in ticker_list if ticker in raw.columns.get_level_values(0)})
+        monthly = prices.resample("ME").last().dropna(how="all")
+        frame = monthly.reset_index().melt(id_vars="Date", var_name="Ticker", value_name="Adj Close")
+        frame = frame.dropna(subset=["Adj Close"])
+        frame["Source"] = "yfinance adjusted close"
+        missing = set(ticker_list) - set(frame["Ticker"].unique())
+        if missing:
+            fallback = synthetic_monthly_prices(sorted(missing), start, end)
+            frame = pd.concat([frame, fallback], ignore_index=True)
+            return frame, "mixed: yfinance plus synthetic fallback for missing tickers"
+        return frame, "yfinance adjusted close"
+    except Exception:
+        return synthetic_monthly_prices(ticker_list, start, end), "synthetic fallback"
+
+
+def build_historical_backtest(selected_stocks: list[str], initial_value: float = BACKTEST_INITIAL_VALUE) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, str]:
+    selected = selected_stocks[:5]
+    benchmark_tickers = list(BENCHMARKS.values())
+    tickers = tuple(selected + benchmark_tickers)
+    prices_long, source = load_monthly_prices(tickers)
+    prices = prices_long.pivot_table(index="Date", columns="Ticker", values="Adj Close", aggfunc="last").sort_index()
+    returns = prices.pct_change()
+
+    series = {}
+    for ticker in selected + benchmark_tickers:
+        if ticker in prices:
+            normalized = prices[ticker].dropna()
+            if not normalized.empty:
+                series[ticker] = normalized / normalized.iloc[0] * initial_value
+
+    selected_returns = returns[selected].dropna(how="all")
+    selected_returns = selected_returns.mean(axis=1, skipna=True).dropna()
+    selected_portfolio = (1 + selected_returns).cumprod() * initial_value
+    if not selected_portfolio.empty:
+        first_date = selected_portfolio.index.min()
+        selected_portfolio.loc[first_date] = initial_value
+        selected_portfolio = selected_portfolio.sort_index()
+        series["Selected 5 equal-weight"] = selected_portfolio
+
+    value_frame = pd.DataFrame(series).sort_index()
+    value_frame = value_frame.dropna(how="all")
+    value_long = value_frame.reset_index().melt(id_vars="Date", var_name="Asset", value_name="Value").dropna()
+    metrics = performance_metrics(value_frame)
+    periods = drawdown_and_gain_periods(value_frame)
+    return value_long, metrics, periods, source
+
+
+def performance_metrics(value_frame: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    selected_final = value_frame.get("Selected 5 equal-weight", pd.Series(dtype=float)).dropna()
+    selected_terminal = float(selected_final.iloc[-1]) if not selected_final.empty else np.nan
+    sp_final = value_frame.get("^GSPC", pd.Series(dtype=float)).dropna()
+    sp_terminal = float(sp_final.iloc[-1]) if not sp_final.empty else np.nan
+
+    for asset in value_frame.columns:
+        values = value_frame[asset].dropna()
+        if len(values) < 2:
+            continue
+        monthly_returns = values.pct_change().dropna()
+        years = max((values.index[-1] - values.index[0]).days / 365.25, 1 / 12)
+        terminal = float(values.iloc[-1])
+        total_return = terminal / values.iloc[0] - 1
+        cagr = (terminal / values.iloc[0]) ** (1 / years) - 1
+        volatility = monthly_returns.std() * np.sqrt(12)
+        running_max = values.cummax()
+        drawdown = values / running_max - 1
+        max_drawdown = drawdown.min()
+        best_month = monthly_returns.max()
+        worst_month = monthly_returns.min()
+        positive_months = (monthly_returns > 0).mean()
+        rows.append(
+            {
+                "Asset": asset_label(asset),
+                "Ticker": asset,
+                "Final value": terminal,
+                "Total return %": total_return * 100,
+                "Return difference vs Selected 5 %": (
+                    (terminal / selected_terminal - 1) * 100
+                    if np.isfinite(selected_terminal) and asset != "Selected 5 equal-weight"
+                    else 0
+                ),
+                "Return difference vs S&P 500 %": (
+                    (terminal / sp_terminal - 1) * 100
+                    if np.isfinite(sp_terminal) and asset != "^GSPC"
+                    else 0
+                ),
+                "CAGR %": cagr * 100,
+                "Annual volatility %": volatility * 100,
+                "Max drawdown %": max_drawdown * 100,
+                "Best month %": best_month * 100,
+                "Worst month %": worst_month * 100,
+                "Positive months %": positive_months * 100,
+                "Risk profile": risk_profile(volatility, max_drawdown),
+                "Greatest risk": greatest_risk(asset, volatility, max_drawdown),
+            }
+        )
+    return pd.DataFrame(rows).sort_values("Final value", ascending=False)
+
+
+def asset_label(asset: str) -> str:
+    labels = {value: key for key, value in BENCHMARKS.items()}
+    labels["Selected 5 equal-weight"] = "Selected 5 equal-weight"
+    return labels.get(asset, asset)
+
+
+def risk_profile(volatility: float, max_drawdown: float) -> str:
+    if volatility > 0.32 or max_drawdown < -0.55:
+        return "Aggressive / high drawdown risk"
+    if volatility > 0.20 or max_drawdown < -0.35:
+        return "Growth / moderate-high risk"
+    if volatility > 0.12 or max_drawdown < -0.22:
+        return "Balanced / moderate risk"
+    return "Defensive / lower volatility"
+
+
+def greatest_risk(asset: str, volatility: float, max_drawdown: float) -> str:
+    if asset in {"IWF", "VUG"}:
+        return "Growth valuation compression during high-rate periods"
+    if asset == "VBIAX":
+        return "Balanced fund still exposed to simultaneous stock/bond drawdowns"
+    if asset == "IWD":
+        return "Value traps, financial cyclicality, and slower earnings growth"
+    if asset == "VTI":
+        return "Broad equity beta and recession drawdowns"
+    if asset == "^GSPC":
+        return "Large-cap concentration and market-cycle drawdowns"
+    if max_drawdown < -0.5:
+        return "Persistent value fall after valuation reset or business-cycle shock"
+    if volatility > 0.3:
+        return "High volatility and timing risk"
+    return "Business execution, valuation, and macro sensitivity"
+
+
+def drawdown_and_gain_periods(value_frame: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    for asset in value_frame.columns:
+        values = value_frame[asset].dropna()
+        if len(values) < 3:
+            continue
+        running_max = values.cummax()
+        drawdown = values / running_max - 1
+        trough_date = drawdown.idxmin()
+        peak_date = values.loc[:trough_date].idxmax()
+        recovery_candidates = values.loc[trough_date:][values.loc[trough_date:] >= values.loc[peak_date]]
+        recovery_date = recovery_candidates.index[0] if not recovery_candidates.empty else pd.NaT
+        fall_months = max((trough_date.year - peak_date.year) * 12 + trough_date.month - peak_date.month, 0)
+        recovery_months = (
+            (recovery_date.year - trough_date.year) * 12 + recovery_date.month - trough_date.month
+            if pd.notna(recovery_date)
+            else np.nan
+        )
+
+        returns = values.pct_change().dropna()
+        gain_streak, fall_streak = longest_streaks(returns)
+        rows.append(
+            {
+                "Asset": asset_label(asset),
+                "Ticker": asset,
+                "Greatest fall start": peak_date.strftime("%Y-%m-%d"),
+                "Greatest fall trough": trough_date.strftime("%Y-%m-%d"),
+                "Recovered by": recovery_date.strftime("%Y-%m-%d") if pd.notna(recovery_date) else "Not recovered by 2025",
+                "Max drawdown %": drawdown.min() * 100,
+                "Persistent value fall months": fall_months,
+                "Recovery months": recovery_months,
+                "Longest gain period months": gain_streak,
+                "Longest losing period months": fall_streak,
+            }
+        )
+    return pd.DataFrame(rows).sort_values("Max drawdown %")
+
+
+def longest_streaks(returns: pd.Series) -> tuple[int, int]:
+    gain_best = gain_current = 0
+    loss_best = loss_current = 0
+    for value in returns:
+        if value > 0:
+            gain_current += 1
+            loss_current = 0
+        elif value < 0:
+            loss_current += 1
+            gain_current = 0
+        else:
+            gain_current = 0
+            loss_current = 0
+        gain_best = max(gain_best, gain_current)
+        loss_best = max(loss_best, loss_current)
+    return gain_best, loss_best
+
+
 def build_evaluation(inputs: MarketInputs, scored: pd.DataFrame, portfolio: pd.DataFrame) -> pd.DataFrame:
     final_value = portfolio.iloc[-1]["Portfolio value"]
     expected_gain = (final_value / inputs.starting_capital - 1) * 100
@@ -925,6 +1197,50 @@ def plot_eval(eval_df: pd.DataFrame) -> go.Figure:
     return fig
 
 
+def plot_backtest_values(value_long: pd.DataFrame) -> go.Figure:
+    fig = px.line(
+        value_long,
+        x="Date",
+        y="Value",
+        color="Asset",
+        title=f"$10,000 growth comparison, {BACKTEST_START[:4]}-{BACKTEST_END[:4]}",
+    )
+    fig.update_traces(line=dict(width=2.4))
+    fig.update_layout(hovermode="x unified", yaxis_title="Portfolio value", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def plot_return_difference(metrics: pd.DataFrame) -> go.Figure:
+    frame = metrics.copy().sort_values("Return difference vs Selected 5 %")
+    fig = px.bar(
+        frame,
+        x="Return difference vs Selected 5 %",
+        y="Asset",
+        orientation="h",
+        color="Return difference vs Selected 5 %",
+        color_continuous_scale=[[0, PALETTE["red"]], [0.5, PALETTE["amber"]], [1, PALETTE["green"]]],
+        title="Return difference versus selected 5-stock portfolio",
+    )
+    fig.add_vline(x=0, line_dash="dot", line_color="#17212b")
+    fig.update_layout(yaxis_title="", coloraxis_showscale=False, margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
+def plot_drawdowns(value_long: pd.DataFrame) -> go.Figure:
+    value_frame = value_long.pivot_table(index="Date", columns="Asset", values="Value", aggfunc="last").sort_index()
+    drawdown = value_frame / value_frame.cummax() - 1
+    drawdown_long = drawdown.reset_index().melt(id_vars="Date", var_name="Asset", value_name="Drawdown")
+    fig = px.area(
+        drawdown_long.dropna(),
+        x="Date",
+        y="Drawdown",
+        color="Asset",
+        title="Persistent value fall periods: drawdown from prior high",
+    )
+    fig.update_layout(hovermode="x unified", yaxis_tickformat=".0%", yaxis_title="Drawdown", margin=dict(l=20, r=20, t=60, b=20))
+    return fig
+
+
 def verdict(eval_df: pd.DataFrame) -> str:
     counts = eval_df["Result"].value_counts().to_dict()
     if counts.get("Fail", 0):
@@ -967,7 +1283,7 @@ def main() -> None:
     metric_cols[3].metric("10Y yield", f"{inputs.ten_year_yield:.2f}%")
     metric_cols[4].metric("AI capex growth", f"{inputs.ai_capex_growth:.0f}%")
 
-    tabs = st.tabs(["Scorecard", "Simulation", "Factors", "Market Surface", "Evaluation", "Data"])
+    tabs = st.tabs(["Scorecard", "Simulation", "2001-2025 Backtest", "Factors", "Market Surface", "Evaluation", "Data"])
 
     with tabs[0]:
         left, right = st.columns([1.25, 1])
@@ -1001,6 +1317,74 @@ def main() -> None:
         st.plotly_chart(plot_portfolio(portfolio), width="stretch")
 
     with tabs[2]:
+        st.subheader("Compare Any 5 Stocks Against Market And JPM Proxy Benchmarks")
+        default_backtest = ["GOOGL", "MSFT", "AMZN", "AVGO", "ETN"]
+        selected_backtest = st.multiselect(
+            "Choose up to 5 watchlist stocks",
+            options=available_watchlist_tickers(),
+            default=default_backtest,
+            max_selections=5,
+        )
+        if len(selected_backtest) != 5:
+            st.warning("Select exactly 5 stocks to make the equal-weight comparison meaningful.")
+        else:
+            value_long, metrics, periods, data_source = build_historical_backtest(selected_backtest)
+            selected_final = metrics.loc[metrics["Ticker"] == "Selected 5 equal-weight", "Final value"]
+            sp_final = metrics.loc[metrics["Ticker"] == "^GSPC", "Final value"]
+            selected_value = float(selected_final.iloc[0]) if not selected_final.empty else np.nan
+            sp_value = float(sp_final.iloc[0]) if not sp_final.empty else np.nan
+
+            st.caption(
+                f"Data source: {data_source}. The JPM strategies are represented by public proxies: "
+                f"JPMCAP -> VTI, U.S. Large Cap Growth -> IWF/VUG, Dynamic Multi-Asset -> VBIAX, "
+                f"Focused Equity Income -> IWD."
+            )
+            metric_cols = st.columns(4)
+            metric_cols[0].metric("Initial investment", money(BACKTEST_INITIAL_VALUE))
+            metric_cols[1].metric("Selected 5 final", money(selected_value) if np.isfinite(selected_value) else "n/a")
+            metric_cols[2].metric("S&P 500 final", money(sp_value) if np.isfinite(sp_value) else "n/a")
+            metric_cols[3].metric(
+                "Difference vs S&P",
+                f"{(selected_value / sp_value - 1) * 100:.1f}%" if np.isfinite(selected_value) and np.isfinite(sp_value) else "n/a",
+            )
+
+            st.plotly_chart(plot_backtest_values(value_long), width="stretch")
+            left, right = st.columns(2)
+            with left:
+                st.plotly_chart(plot_return_difference(metrics), width="stretch")
+            with right:
+                st.plotly_chart(plot_drawdowns(value_long), width="stretch")
+
+            st.subheader("Performance And Risk Profile")
+            st.dataframe(metrics.round(2), width="stretch", hide_index=True)
+            st.subheader("Greatest Value Fall And Persistent Gain/Loss Periods")
+            st.dataframe(periods.round(2), width="stretch", hide_index=True)
+            st.subheader("Benchmark And JPM Strategy Proxy Map")
+            st.dataframe(
+                pd.DataFrame(
+                    [
+                        {"JPM strategy": strategy, "Public proxy": proxy}
+                        for strategy, proxy in JPM_PROXY_MAP.items()
+                    ]
+                ),
+                width="stretch",
+                hide_index=True,
+            )
+
+            st.download_button(
+                "Download backtest metrics",
+                data=metrics.to_csv(index=False),
+                file_name="finance_backtest_metrics.csv",
+                mime="text/csv",
+            )
+            st.download_button(
+                "Download drawdown periods",
+                data=periods.to_csv(index=False),
+                file_name="finance_backtest_periods.csv",
+                mime="text/csv",
+            )
+
+    with tabs[3]:
         st.plotly_chart(plot_factor_heatmap(scored), width="stretch")
         st.markdown(
             """
@@ -1013,10 +1397,10 @@ def main() -> None:
             unsafe_allow_html=True,
         )
 
-    with tabs[3]:
+    with tabs[4]:
         st.plotly_chart(plot_3d_surface(inputs), width="stretch")
 
-    with tabs[4]:
+    with tabs[5]:
         result = verdict(eval_df)
         if result.startswith("Fail"):
             st.error(result)
@@ -1030,7 +1414,7 @@ def main() -> None:
         with right:
             st.dataframe(eval_df, width="stretch", hide_index=True)
 
-    with tabs[5]:
+    with tabs[6]:
         st.subheader("Scenario-adjusted watchlist")
         st.dataframe(scored.round(2), width="stretch", hide_index=True)
         st.subheader("Portfolio path")

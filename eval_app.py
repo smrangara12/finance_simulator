@@ -2,7 +2,14 @@ from __future__ import annotations
 
 from streamlit.testing.v1 import AppTest
 
-from app import MarketInputs, build_evaluation, macro_adjusted_frame, preset_values, simulate_paths
+from app import (
+    MarketInputs,
+    build_evaluation,
+    build_historical_backtest,
+    macro_adjusted_frame,
+    preset_values,
+    simulate_paths,
+)
 
 
 def inputs_from_preset(name: str) -> MarketInputs:
@@ -50,6 +57,15 @@ def run_model_evals() -> None:
         top = scored.iloc[0]["Ticker"]
         final_value = portfolio.iloc[-1]["Portfolio value"]
         print(f"{preset}: top={top}; final=${final_value:,.0f}; eval={eval_df['Result'].value_counts().to_dict()}")
+
+    value_long, metrics, periods, source = build_historical_backtest(["GOOGL", "MSFT", "AMZN", "AVGO", "ETN"])
+    assert not value_long.empty, "backtest value series should not be empty"
+    assert not metrics.empty, "backtest metrics should not be empty"
+    assert not periods.empty, "backtest periods should not be empty"
+    assert "Selected 5 equal-weight" in set(metrics["Ticker"]), "selected portfolio metrics missing"
+    assert metrics["Final value"].gt(0).all(), "all final values should be positive"
+    assert source in {"yfinance adjusted close", "synthetic fallback", "mixed: yfinance plus synthetic fallback for missing tickers"}
+    print(f"Backtest: assets={metrics['Ticker'].nunique()}; source={source}")
 
 
 def run_streamlit_eval() -> None:
